@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+// REDUX
+import { Provider } from "react-redux";
+import store from "./redux/store";
+
+// STYLES
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "./styles/styles.scss";
+
+// ROUTES
+import AppRoutes from "./Routes";
+
+// ALERT
+import { positions, transitions, Provider as AlertProvider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
+
+const options = {
+  timeout: 5000,
+  position: positions.BOTTOM_CENTER,
+  transition: transitions.SCALE,
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <AlertProvider template={AlertTemplate} {...options}>
+        <AppRoutes />
+      </AlertProvider>
+    </Provider>
   );
 }
 
