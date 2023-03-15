@@ -158,6 +158,10 @@ html {
   color: $color9;
 }
 
+button:disabled {
+  opacity: 0.5;
+}
+
 // LAYOUT
 .layout_container {
   padding: 1rem;
@@ -170,6 +174,8 @@ html {
 .loading_page {
   position: fixed;
   height: 100vh;
+  left: 0%;
+  top: 0%;
   background: $color1;
   width: 100%;
   z-index: 999;

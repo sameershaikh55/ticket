@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { loadUser } from "./redux/action/admin/auth";
 import { dark, light } from "./redux/action/mode";
+import PrivateRoute from "./components/Routes/PrivateRoute";
+import PublicRoute from "./components/Routes/PublicRoute";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -11,10 +14,11 @@ import AdminLayout from "./layout/AdminLayout";
 
 // ADMIN
 import Clients from "./pages/admin/Clients";
+import AdminLogin from "./pages/admin/Login";
 
 // CLIENTS
 import Dashboard from "./pages/client/Dashboard";
-import Login from "./pages/client/Login";
+import ClientLogin from "./pages/client/Login";
 import Settings from "./pages/client/Settings";
 import TicketDetail from "./pages/client/TicketDetail";
 
@@ -35,6 +39,10 @@ const AppRoutes = () => {
     setLoading(false);
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(loadUser());
+  }, []);
+
   if (loading) {
     return <Loader />;
   }
@@ -43,38 +51,73 @@ const AppRoutes = () => {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/ticket" element={<TicketDetail />} />
+          {/* PUBLIC ROUTES */}
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <ClientLogin />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/admin/login"
+            element={
+              <PublicRoute>
+                <AdminLogin />
+              </PublicRoute>
+            }
+          />
+
+          {/* USER ROUTES */}
+          <Route
+            path="/ticket"
+            element={
+              <PrivateRoute>
+                <TicketDetail />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/"
             element={
-              <PageLayout>
-                <Dashboard />
-              </PageLayout>
+              <PrivateRoute>
+                <PageLayout>
+                  <Dashboard />
+                </PageLayout>
+              </PrivateRoute>
             }
           />
           <Route
             path="/settings"
             element={
-              <PageLayout>
-                <Settings />
-              </PageLayout>
+              <PrivateRoute>
+                <PageLayout>
+                  <Settings />
+                </PageLayout>
+              </PrivateRoute>
             }
           />
+
+          {/* ADMIN ROUTES */}
           <Route
             path="/admin/clients"
             element={
-              <AdminLayout>
-                <Clients />
-              </AdminLayout>
+              <PrivateRoute>
+                <AdminLayout>
+                  <Clients />
+                </AdminLayout>
+              </PrivateRoute>
             }
           />
           <Route
             path="/admin/team"
             element={
-              <AdminLayout>
-                <Teams />
-              </AdminLayout>
+              <PrivateRoute>
+                <AdminLayout>
+                  <Teams />
+                </AdminLayout>
+              </PrivateRoute>
             }
           />
         </Routes>

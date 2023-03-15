@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import logo2 from "../../assets/logo2.svg";
@@ -9,8 +9,10 @@ import i3 from "../../assets/sidebar/i3.svg";
 import Di1 from "../../assets/sidebarDark/i1.svg";
 import Di2 from "../../assets/sidebarDark/i2.svg";
 import Di3 from "../../assets/sidebarDark/i3.svg";
+import { logout } from "../../redux/action/admin/auth";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
   const { mode } = useSelector((state) => state.mode);
   const location = useLocation();
   const links = [
@@ -58,8 +60,9 @@ const Sidebar = () => {
             );
           })}
           <li
-            className="d-flex justify-content-center align-items-center rounded-circle"
+            className="d-flex justify-content-center align-items-center rounded-circle pointer"
             style={{ width: "35px", height: "35px" }}
+            onClick={() => dispatch(logout())}
           >
             {(mode === "dark" && <img src={i3} alt="" />) || (
               <img src={Di3} alt="" />

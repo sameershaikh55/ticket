@@ -4,9 +4,11 @@ import { composeWithDevTools } from "redux-devtools-extension";
 
 // REDUCERS
 import { modeReducer } from "./reducer/mode";
+import { userReducer } from "./reducer/admin/auth";
 
 const reducer = combineReducers({
   mode: modeReducer,
+  adminUser: userReducer,
 });
 
 let initialState = {};

@@ -7,6 +7,7 @@ import deleteI from "../assets/icons/delete.svg";
 import Modal from "./Modal";
 import Input2 from "./Input2";
 import Textarea from "./Textarea";
+import lock from "../assets/icons/lock.svg";
 
 const ClientCard = () => {
   const [register, setRegister] = useState(false);
@@ -35,6 +36,14 @@ const ClientCard = () => {
       type: "text",
       placeholder: "Enter Email",
       name: "email",
+      class: "col-12",
+    },
+    {
+      label: "Password",
+      type: "text",
+      placeholder: "Enter Password",
+      name: "password",
+      icon: lock,
       class: "col-12",
     },
   ];

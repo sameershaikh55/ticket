@@ -156,7 +156,11 @@ const Dashboard = () => {
 
               <div className="inner_container one">
                 {[1, 1, 1, 1, 1, 1].map((content, i) => {
-                  return <TaskCard i={i} />;
+                  return (
+                    <div key={i}>
+                      <TaskCard />
+                    </div>
+                  );
                 })}
               </div>
 
@@ -174,7 +178,11 @@ const Dashboard = () => {
 
               <div className="inner_container">
                 {[1, 1, 1].map((content, i) => {
-                  return <TaskCard i={i} />;
+                  return (
+                    <div key={i}>
+                      <TaskCard />
+                    </div>
+                  );
                 })}
               </div>
             </div>
@@ -185,7 +193,11 @@ const Dashboard = () => {
 
               <div className="inner_container">
                 {[1, 1, 1, 1].map((content, i) => {
-                  return <TaskCard i={i} />;
+                  return (
+                    <div key={i}>
+                      <TaskCard />
+                    </div>
+                  );
                 })}
               </div>
             </div>

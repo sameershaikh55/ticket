@@ -1,12 +1,15 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import adminIcon from "../../assets/adminIcon.svg";
 import i1 from "../../assets/adminSidebar/i1.svg";
 import i2 from "../../assets/adminSidebar/i2.svg";
 import i3 from "../../assets/sidebar/i3.svg";
+import { logout } from "../../redux/action/admin/auth";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const links = [
     {
@@ -53,8 +56,9 @@ const Sidebar = () => {
       <div className="d-flex flex-column justify-content-between align-items-center gap-5">
         <ul className="list-unstyled d-flex flex-column gap-4">
           <li
-            className="d-flex justify-content-center align-items-center rounded-circle"
+            className="d-flex justify-content-center align-items-center rounded-circle pointer"
             style={{ width: "35px", height: "35px" }}
+            onClick={() => dispatch(logout())}
           >
             <img src={i3} alt="" />
           </li>
