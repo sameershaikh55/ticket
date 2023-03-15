@@ -5,10 +5,12 @@ import { composeWithDevTools } from "redux-devtools-extension";
 // REDUCERS
 import { modeReducer } from "./reducer/mode";
 import { userReducer } from "./reducer/admin/auth";
+import { teamReducer } from "./reducer/admin/team";
 
 const reducer = combineReducers({
   mode: modeReducer,
   adminUser: userReducer,
+  team: teamReducer,
 });
 
 let initialState = {};

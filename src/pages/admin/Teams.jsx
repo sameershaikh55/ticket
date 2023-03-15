@@ -1,104 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cross from "../../assets/icons/crossW.svg";
 import TeamCard from "../../components/TeamCard";
-import Modal from "../../components/Modal";
-import Input2 from "../../components/Input2";
-import share from "../../assets/icons/share.svg";
-import Textarea from "../../components/Textarea";
+import { useDispatch, useSelector } from "react-redux";
+import { useAlert } from "react-alert";
+import { clearErrors, getTeam } from "../../redux/action/admin/team";
+import TeamForm from "../../components/TeamForm";
+import Loader from "../../components/Loader";
+import { DELETE_TEAM_RESET } from "../../redux/type/admin/team";
 
 const Teams = () => {
   const [register, setRegister] = useState(false);
-  const [addTicketHandle, setAddTicketHandle] = useState({
-    name: "",
-    email: "",
-    projects: "",
-  });
-  const fields = [
-    {
-      label: "Name",
-      type: "text",
-      placeholder: "Enter Name",
-      name: "name",
-      class: "col-6",
-    },
-    {
-      label: "Email",
-      type: "text",
-      placeholder: "Enter Email",
-      name: "email",
-      class: "col-6",
-    },
-    {
-      label: "Projects",
-      type: "checks",
-      name: "projects",
-      class: "col-12",
-    },
-  ];
+  const [editData, setEditData] = useState(false);
 
-  const handleChange = (e) => {
-    setAddTicketHandle({
-      ...addTicketHandle,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const dispatch = useDispatch();
+  const alert = useAlert();
+
+  const { team, error, loading, teamDeleted } = useSelector(
+    (state) => state.team
+  );
+
+  useEffect(() => {
+    dispatch(getTeam());
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
+
+    if (teamDeleted) {
+      alert.success("Member deleted!");
+      dispatch({ type: DELETE_TEAM_RESET });
+    }
+  }, [dispatch, alert, teamDeleted, error]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="admin_clients_container">
       {register && (
-        <Modal register={register} setRegister={setRegister}>
-          <form className="form_container pt-4">
-            <div className="container-fluid">
-              <div className="row gy-3">
-                {fields.map((content, idx) => {
-                  return (
-                    <div key={idx} className={content.class}>
-                      {(content.type === "checks" && (
-                        <div className="checks">
-                          <label className="main" htmlFor="">
-                            {content.label}
-                          </label>
-
-                          <div className="check">
-                            {[1, 1, 1].map((_, i) => {
-                              return (
-                                <div className="d-flex align-items-center gap-2">
-                                  <input
-                                    type="checkbox"
-                                    id={`myCheckbox${i}`}
-                                    name={`myCheckbox${i}`}
-                                  />
-                                  <label htmlFor={`myCheckbox${i}`}>
-                                    KPN-1
-                                  </label>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )) || (
-                        <Input2
-                          {...content}
-                          value={addTicketHandle[content.name]}
-                          onChange={(e) => handleChange(e)}
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-
-                <div className="col-12">
-                  <button
-                    type="submit"
-                    className="rounded-3 btn-lg rounded-3 border-0 w-100 text-center text-white py-2"
-                  >
-                    Add team member
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </Modal>
+        <TeamForm
+          register={register}
+          setRegister={setRegister}
+          editData={editData}
+          setEditData={setEditData}
+        />
       )}
 
       <div className="container-fluid">
@@ -106,7 +55,10 @@ const Teams = () => {
           <div className="d-flex justify-content-between">
             <h5 className="fw400">TEAM</h5>
             <button
-              onClick={() => setRegister(true)}
+              onClick={() => {
+                setRegister(true);
+                setEditData(null);
+              }}
               className="bg-transparent border-0"
             >
               <img src={cross} alt="" />
@@ -114,9 +66,20 @@ const Teams = () => {
           </div>
 
           <div className="clients_container mt-3">
-            {[1, 1, 1].map(() => {
-              return <TeamCard />;
-            })}
+            {(team.length &&
+              team.map((content, i) => {
+                return (
+                  <div key={i}>
+                    <TeamCard
+                      {...content}
+                      setEditData={setEditData}
+                      setRegister={setRegister}
+                    />
+                  </div>
+                );
+              })) || (
+              <div className="text-white text-center py-3">no data found</div>
+            )}
           </div>
         </div>
       </div>

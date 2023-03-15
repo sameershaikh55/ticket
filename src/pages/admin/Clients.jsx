@@ -3,6 +3,7 @@ import cross from "../../assets/icons/crossW.svg";
 import ClientCard from "../../components/ClientCard";
 import Modal from "../../components/Modal";
 import Input2 from "../../components/Input2";
+import UploadInout from "../../components/UploadInput";
 import share from "../../assets/icons/share.svg";
 import Textarea from "../../components/Textarea";
 
@@ -15,6 +16,7 @@ const Client = () => {
     sla: "",
     systems: "",
   });
+
   const fields = [
     {
       label: "Name",
@@ -32,7 +34,7 @@ const Client = () => {
     },
     {
       label: "Logo",
-      type: "text",
+      type: "file",
       name: "logo",
       class: "col-12",
       placeholder: "Logo",
@@ -79,13 +81,20 @@ const Client = () => {
                           value={addTicketHandle[content.name]}
                           onChange={(e) => handleChange(e)}
                         />
-                      )) || (
-                        <Input2
-                          {...content}
-                          value={addTicketHandle[content.name]}
-                          onChange={(e) => handleChange(e)}
-                        />
-                      )}
+                      )) ||
+                        (content.type === "file" && (
+                          <UploadInout
+                            {...content}
+                            value={addTicketHandle[content.name]}
+                            onChange={(e) => handleChange(e)}
+                          />
+                        )) || (
+                          <Input2
+                            {...content}
+                            value={addTicketHandle[content.name]}
+                            onChange={(e) => handleChange(e)}
+                          />
+                        )}
                     </div>
                   );
                 })}
