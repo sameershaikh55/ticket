@@ -23,11 +23,13 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
     (state) => state.team
   );
 
+  const { clients } = useSelector((state) => state.client);
+
   const [inputHandle, setInputHandle] = useState({
     name: "",
     email: "",
     picture: "",
-    // projects: "",
+    projects: [],
   });
 
   const fields = [
@@ -78,6 +80,20 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
     }
   };
 
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    let { projects } = inputHandle;
+    if (checked) {
+      // add checked client to projects array
+      projects = [...projects, name];
+    } else {
+      // remove unchecked client from projects array
+      projects = projects.filter((p) => p !== name);
+    }
+    // update state with checked projects
+    setInputHandle((prevState) => ({ ...prevState, projects }));
+  };
+
   const submit = (e) => {
     e.preventDefault();
     const errors = validateFields(inputHandle);
@@ -92,7 +108,7 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
         updateTeam(
           {
             ...inputHandle,
-            projects: "kpn-1, kpn-2",
+            projects: inputHandle.projects.join(", "),
           },
           editData.id
         )
@@ -101,7 +117,7 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
       dispatch(
         registerTeam({
           ...inputHandle,
-          projects: "kpn-1, kpn-2",
+          projects: inputHandle.projects.join(", "),
           createdAt: new Date().toISOString(),
         })
       );
@@ -129,7 +145,7 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
         name: "",
         email: "",
         picture: "",
-        projects: "",
+        projects: [],
       });
     }
   }, [dispatch, alert, success, teamError]);
@@ -141,7 +157,7 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
         name,
         email,
         picture,
-        projects,
+        projects: (projects && projects.split(", ")) || [],
       });
     }
   }, [editData]);
@@ -162,25 +178,32 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
                             {content.label}
                           </label>
 
-                          <div className="check">
-                            {[1, 1, 1].map((_, i) => {
-                              return (
-                                <div
-                                  key={i}
-                                  className="d-flex align-items-center gap-2"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    id={`myCheckbox${i}`}
-                                    name={`myCheckbox${i}`}
-                                  />
-                                  <label htmlFor={`myCheckbox${i}`}>
-                                    KPN-1
-                                  </label>
-                                </div>
-                              );
-                            })}
-                          </div>
+                          {(!clients.length && "no project available") || (
+                            <div className="check">
+                              {clients.map((content, i) => {
+                                const { name } = content;
+                                const isChecked =
+                                  inputHandle.projects.includes(name);
+                                return (
+                                  <div
+                                    key={i}
+                                    className="d-flex align-items-center gap-2"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      id={`myCheckbox${i}`}
+                                      name={name}
+                                      onChange={handleCheckboxChange}
+                                      checked={isChecked}
+                                    />
+                                    <label htmlFor={`myCheckbox${i}`}>
+                                      {name}
+                                    </label>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
                       )) ||
                         (content.type === "file" && (

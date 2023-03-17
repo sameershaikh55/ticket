@@ -7,6 +7,7 @@ import { clearErrors, getTeam } from "../../redux/action/admin/team";
 import TeamForm from "../../components/TeamForm";
 import Loader from "../../components/Loader";
 import { DELETE_TEAM_RESET } from "../../redux/type/admin/team";
+import { getClient } from "../../redux/action/admin/clients";
 
 const Teams = () => {
   const [register, setRegister] = useState(false);
@@ -21,6 +22,7 @@ const Teams = () => {
 
   useEffect(() => {
     dispatch(getTeam());
+    dispatch(getClient());
   }, []);
 
   useEffect(() => {
