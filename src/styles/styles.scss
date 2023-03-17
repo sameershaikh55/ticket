@@ -920,6 +920,8 @@ input[type="date"] {
       flex-direction: column;
       gap: 1rem;
       padding-right: 0.5rem;
+      max-height: calc(100vh - 160px);
+      overflow: auto;
 
       &::-webkit-scrollbar {
         width: 5px;

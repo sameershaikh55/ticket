@@ -12,8 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import { ADD_TEAM_RESET, UPDATE_TEAM_RESET } from "../redux/type/admin/team";
 import SmallLoader from "./SmallLoader";
-import { storage } from "../firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { validateFields } from "../utils/validateFields";
+import { uploadImage } from "../utils/uploadImage";
 
 const TeamForm = ({ register, setRegister, editData, setEditData }) => {
   const dispatch = useDispatch();
@@ -23,11 +23,11 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
     (state) => state.team
   );
 
-  const [addTicketHandle, setAddTicketHandle] = useState({
+  const [inputHandle, setInputHandle] = useState({
     name: "",
     email: "",
     picture: "",
-    projects: "",
+    // projects: "",
   });
 
   const fields = [
@@ -63,56 +63,35 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
 
   const handleChange = (e) => {
     if (e.target.name === "picture") {
-      uploadFiles(e.target.files[0]);
+      uploadImage({
+        file: e.target.files[0],
+        fieldName: "picture",
+        storageFolder: "team",
+        inputHandle,
+        setInputHandle,
+      });
     } else {
-      setAddTicketHandle({
-        ...addTicketHandle,
+      setInputHandle({
+        ...inputHandle,
         [e.target.name]: e.target.value,
       });
     }
   };
 
-  // IMAGE UPLOAD TO FIREBASE
-  const uploadFiles = (file) => {
-    setAddTicketHandle({
-      ...addTicketHandle,
-      picture: "loading...",
-    });
-
-    if (!file) {
-      setAddTicketHandle({
-        ...addTicketHandle,
-        picture: "file not found",
-      });
-      return;
-    }
-
-    const storageRef = ref(storage, `team/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => console.log(error),
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setAddTicketHandle({
-            ...addTicketHandle,
-            picture: downloadURL,
-          });
-        });
-      }
-    );
-  };
-
   const submit = (e) => {
     e.preventDefault();
+    const errors = validateFields(inputHandle);
+
+    if (Object.keys(errors).length !== 0) {
+      alert.error(errors.join(", "));
+      return;
+    }
 
     if (editData) {
       dispatch(
         updateTeam(
           {
-            ...addTicketHandle,
+            ...inputHandle,
             projects: "kpn-1, kpn-2",
           },
           editData.id
@@ -121,7 +100,7 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
     } else {
       dispatch(
         registerTeam({
-          ...addTicketHandle,
+          ...inputHandle,
           projects: "kpn-1, kpn-2",
           createdAt: new Date().toISOString(),
         })
@@ -146,7 +125,7 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
 
       setEditData(null);
       setRegister(false);
-      setAddTicketHandle({
+      setInputHandle({
         name: "",
         email: "",
         picture: "",
@@ -158,7 +137,7 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
   useEffect(() => {
     if (editData) {
       const { name, email, picture, projects } = editData;
-      setAddTicketHandle({
+      setInputHandle({
         name,
         email,
         picture,
@@ -207,13 +186,13 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
                         (content.type === "file" && (
                           <UploadInout
                             {...content}
-                            value={addTicketHandle[content.name]}
+                            value={inputHandle[content.name]}
                             onChange={(e) => handleChange(e)}
                           />
                         )) || (
                           <Input2
                             {...content}
-                            value={addTicketHandle[content.name]}
+                            value={inputHandle[content.name]}
                             onChange={(e) => handleChange(e)}
                           />
                         )}
@@ -223,7 +202,11 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
 
                 <div className="col-12">
                   <button
-                    disabled={(teamLoading && true) || false}
+                    disabled={
+                      !teamLoading && inputHandle.picture !== "loading..."
+                        ? false
+                        : true
+                    }
                     type="submit"
                     className="rounded-3 btn-lg rounded-3 border-0 w-100 text-center text-white py-2"
                   >

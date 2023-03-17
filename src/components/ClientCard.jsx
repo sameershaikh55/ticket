@@ -30,7 +30,7 @@ const ClientCard = ({
     <div className="client_card gap-3">
       <div className="d-flex justify-content-between w-100 gap-3">
         <div className="d-flex align-items-center gap-3 w-100">
-          <img className="logo" src={logo} alt="" />
+          <img className="logo rounded-1" src={logo} alt="" />
           <div className="d-flex align-items-center w-100 gap-3">
             <input className="w-100 px-2" type="text" value={name} readOnly />
             <input
@@ -68,7 +68,7 @@ const ClientCard = ({
         </div>
       </div>
 
-      <ManagerCard />
+      <ManagerCard id={id} />
     </div>
   );
 };

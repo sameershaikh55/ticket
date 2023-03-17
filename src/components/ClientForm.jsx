@@ -7,8 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import share from "../assets/icons/share.svg";
 import SmallLoader from "./SmallLoader";
-import { storage } from "../firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {
   updateClient,
   registerClient,
@@ -18,6 +16,8 @@ import {
   ADD_CLIENT_RESET,
   UPDATE_CLIENT_RESET,
 } from "../redux/type/admin/clients";
+import { validateFields } from "../utils/validateFields";
+import { uploadImage } from "../utils/uploadImage";
 
 const ClientForm = ({ register, setRegister, editData, setEditData }) => {
   const dispatch = useDispatch();
@@ -78,7 +78,13 @@ const ClientForm = ({ register, setRegister, editData, setEditData }) => {
 
   const handleChange = (e) => {
     if (e.target.name === "logo") {
-      uploadFiles(e.target.files[0]);
+      uploadImage({
+        file: e.target.files[0],
+        fieldName: "logo",
+        storageFolder: "client",
+        inputHandle,
+        setInputHandle,
+      });
     } else {
       setInputHandle({
         ...inputHandle,
@@ -87,41 +93,14 @@ const ClientForm = ({ register, setRegister, editData, setEditData }) => {
     }
   };
 
-  // IMAGE UPLOAD TO FIREBASE
-  const uploadFiles = (file) => {
-    setInputHandle({
-      ...inputHandle,
-      logo: "loading...",
-    });
-
-    if (!file) {
-      setInputHandle({
-        ...inputHandle,
-        logo: "file not found",
-      });
-      return;
-    }
-
-    const storageRef = ref(storage, `client/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => console.log(error),
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setInputHandle({
-            ...inputHandle,
-            logo: downloadURL,
-          });
-        });
-      }
-    );
-  };
-
   const submit = (e) => {
     e.preventDefault();
+    const errors = validateFields(inputHandle);
+
+    if (Object.keys(errors).length !== 0) {
+      alert.error(errors.join(", "));
+      return;
+    }
 
     if (editData) {
       dispatch(
@@ -150,10 +129,10 @@ const ClientForm = ({ register, setRegister, editData, setEditData }) => {
 
     if (success) {
       if (editData) {
-        alert.success("Member edited!");
+        alert.success("Client edited!");
         dispatch({ type: UPDATE_CLIENT_RESET });
       } else {
-        alert.success("Member created!");
+        alert.success("Client created!");
         dispatch({ type: ADD_CLIENT_RESET });
       }
 
@@ -181,8 +160,6 @@ const ClientForm = ({ register, setRegister, editData, setEditData }) => {
       });
     }
   }, [editData]);
-
-  console.log(inputHandle);
 
   return (
     <>
@@ -220,7 +197,11 @@ const ClientForm = ({ register, setRegister, editData, setEditData }) => {
 
                 <div className="col-12">
                   <button
-                    disabled={(clientLoading && true) || false}
+                    disabled={
+                      !clientLoading && inputHandle.logo !== "loading..."
+                        ? false
+                        : true
+                    }
                     type="submit"
                     className="rounded-3 btn-lg rounded-3 border-0 w-100 text-center text-white py-2"
                   >

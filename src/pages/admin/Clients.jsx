@@ -5,8 +5,14 @@ import cross from "../../assets/icons/crossW.svg";
 import ClientCard from "../../components/ClientCard";
 import ClientForm from "../../components/ClientForm";
 import Loader from "../../components/Loader";
-import { clearErrors, getClient } from "../../redux/action/admin/clients";
+import {
+  clearErrors as clientClearErrors,
+  getClient,
+} from "../../redux/action/admin/clients";
+import { getManager } from "../../redux/action/admin/managers";
 import { DELETE_CLIENT_RESET } from "../../redux/type/admin/clients";
+import { clearErrors as managerClearErrors } from "../../redux/action/admin/managers";
+import { DELETE_MANAGER_RESET } from "../../redux/type/admin/managers";
 
 const Client = () => {
   const [register, setRegister] = useState(false);
@@ -15,25 +21,40 @@ const Client = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
-  const { clients, error, loading, clientDeleted } = useSelector(
+  const { clients, clientDeleted, loading, ...client } = useSelector(
     (state) => state.client
   );
 
+  const { managerDeleted, ...manager } = useSelector((state) => state.manager);
+
   useEffect(() => {
     dispatch(getClient());
+    dispatch(getManager());
   }, []);
 
   useEffect(() => {
-    if (error) {
-      alert.error(error);
-      dispatch(clearErrors());
+    if (client.error) {
+      alert.error(client.error);
+      dispatch(clientClearErrors());
     }
 
     if (clientDeleted) {
-      alert.success("Member deleted!");
+      alert.success("Client deleted!");
       dispatch({ type: DELETE_CLIENT_RESET });
     }
-  }, [dispatch, alert, clientDeleted, error]);
+  }, [dispatch, alert, clientDeleted, client.error]);
+
+  useEffect(() => {
+    if (manager.error) {
+      alert.error(manager.error);
+      dispatch(managerClearErrors());
+    }
+
+    if (managerDeleted) {
+      alert.success("Manager deleted!");
+      dispatch({ type: DELETE_MANAGER_RESET });
+    }
+  }, [dispatch, alert, managerDeleted, manager.error]);
 
   if (loading) {
     return <Loader />;
@@ -55,7 +76,10 @@ const Client = () => {
           <div className="d-flex justify-content-between">
             <h5 className="fw400">CLIENTS</h5>
             <button
-              onClick={() => setRegister(true)}
+              onClick={() => {
+                setRegister(true);
+                setEditData(null);
+              }}
               className="bg-transparent border-0"
             >
               <img src={cross} alt="" />

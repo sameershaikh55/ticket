@@ -25,6 +25,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { deleteFileFromUrl } from "../../../utils/deleteImagefromStorage";
+import { deleteManagersUnderClient } from "../../../utils/deleteManagersUnderClient";
 
 const collectionName = "client";
 
@@ -32,7 +33,6 @@ const collectionName = "client";
 export const registerClient = (data) => async (dispatch) => {
   try {
     dispatch({ type: ADD_CLIENT_REQUEST });
-    console.log(data);
 
     const docRef = await addDoc(collection(database, collectionName), data);
     const docSnapshot = await getDoc(docRef);
@@ -79,6 +79,11 @@ export const deleteClient = (id, url) => async (dispatch) => {
   try {
     await deleteDoc(doc(database, collectionName, id));
     deleteFileFromUrl(url);
+    deleteManagersUnderClient({
+      collectionName: "manager",
+      fieldName: "client",
+      fieldValue: id,
+    });
 
     dispatch({
       type: DELETE_CLIENT_SUCCESS,
