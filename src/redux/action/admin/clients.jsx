@@ -1,17 +1,17 @@
 import {
-  ADD_TEAM_REQUEST,
-  ADD_TEAM_SUCCESS,
-  ADD_TEAM_FAIL,
+  ADD_CLIENT_REQUEST,
+  ADD_CLIENT_SUCCESS,
+  ADD_CLIENT_FAIL,
   CLEAR_ERRORS,
-  GET_TEAM_REQUEST,
-  GET_TEAM_SUCCESS,
-  GET_TEAM_FAIL,
-  DELETE_TEAM_FAIL,
-  DELETE_TEAM_SUCCESS,
-  UPDATE_TEAM_REQUEST,
-  UPDATE_TEAM_SUCCESS,
-  UPDATE_TEAM_FAIL,
-} from "../../type/admin/team";
+  GET_CLIENT_REQUEST,
+  GET_CLIENT_SUCCESS,
+  GET_CLIENT_FAIL,
+  DELETE_CLIENT_FAIL,
+  DELETE_CLIENT_SUCCESS,
+  UPDATE_CLIENT_REQUEST,
+  UPDATE_CLIENT_SUCCESS,
+  UPDATE_CLIENT_FAIL,
+} from "../../type/admin/clients";
 import { database } from "../../../firebase";
 import {
   collection,
@@ -26,33 +26,34 @@ import {
 } from "firebase/firestore";
 import { deleteFileFromUrl } from "../../../utils/deleteImagefromStorage";
 
-const collectionName = "team";
+const collectionName = "client";
 
-// Register Team
-export const registerTeam = (teamData) => async (dispatch) => {
+// Register Client
+export const registerClient = (data) => async (dispatch) => {
   try {
-    dispatch({ type: ADD_TEAM_REQUEST });
+    dispatch({ type: ADD_CLIENT_REQUEST });
+    console.log(data);
 
-    const docRef = await addDoc(collection(database, collectionName), teamData);
+    const docRef = await addDoc(collection(database, collectionName), data);
     const docSnapshot = await getDoc(docRef);
     const addedData = { id: docSnapshot.id, ...docSnapshot.data() };
 
     dispatch({
-      type: ADD_TEAM_SUCCESS,
+      type: ADD_CLIENT_SUCCESS,
       payload: addedData,
     });
   } catch (error) {
     dispatch({
-      type: ADD_TEAM_FAIL,
+      type: ADD_CLIENT_FAIL,
       payload: error.message,
     });
   }
 };
 
-// Get Team
-export const getTeam = () => async (dispatch) => {
+// Get Client
+export const getClient = () => async (dispatch) => {
   try {
-    dispatch({ type: GET_TEAM_REQUEST });
+    dispatch({ type: GET_CLIENT_REQUEST });
 
     const q = query(
       collection(database, collectionName),
@@ -65,47 +66,49 @@ export const getTeam = () => async (dispatch) => {
     }));
 
     dispatch({
-      type: GET_TEAM_SUCCESS,
+      type: GET_CLIENT_SUCCESS,
       payload: data,
     });
   } catch (error) {
-    dispatch({ type: GET_TEAM_FAIL, payload: error.message });
+    dispatch({ type: GET_CLIENT_FAIL, payload: error.message });
   }
 };
 
-// Delete Team
-export const deleteTeam = (id, url) => async (dispatch) => {
+// Delete Client
+export const deleteClient = (id, url) => async (dispatch) => {
   try {
     await deleteDoc(doc(database, collectionName, id));
     deleteFileFromUrl(url);
 
     dispatch({
-      type: DELETE_TEAM_SUCCESS,
+      type: DELETE_CLIENT_SUCCESS,
       payload: id,
     });
   } catch (error) {
     dispatch({
-      type: DELETE_TEAM_FAIL,
+      type: DELETE_CLIENT_FAIL,
       payload: error.message,
     });
   }
 };
 
-// Update Team
-export const updateTeam = (updatedData, id) => async (dispatch) => {
+// Update Client
+export const updateClient = (updatedData, id) => async (dispatch) => {
   try {
-    dispatch({ type: UPDATE_TEAM_REQUEST });
+    dispatch({ type: UPDATE_CLIENT_REQUEST });
 
     const docRef = doc(database, collectionName, id);
     await updateDoc(docRef, updatedData);
+    const docSnapshot = await getDoc(docRef);
+    const afterUpdate = { id: docSnapshot.id, ...docSnapshot.data() };
 
     dispatch({
-      type: UPDATE_TEAM_SUCCESS,
-      payload: { id: id, ...updatedData },
+      type: UPDATE_CLIENT_SUCCESS,
+      payload: afterUpdate,
     });
   } catch (error) {
     dispatch({
-      type: UPDATE_TEAM_FAIL,
+      type: UPDATE_CLIENT_FAIL,
       payload: error.message,
     });
   }

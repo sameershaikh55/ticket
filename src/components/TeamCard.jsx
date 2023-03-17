@@ -47,7 +47,7 @@ const TeamCard = ({
             style={{ width: "18px" }}
             src={deleteI}
             alt=""
-            onClick={() => dispatch(deleteTeam(id))}
+            onClick={() => dispatch(deleteTeam(id, picture))}
           />
         </div>
       </div>

@@ -14,21 +14,16 @@ import {
   UPDATE_TEAM_SUCCESS,
   UPDATE_TEAM_FAIL,
   UPDATE_TEAM_RESET,
-  GET_SINGLE_TEAM_FAIL,
-  GET_SINGLE_TEAM_REQUEST,
-  GET_SINGLE_TEAM_SUCCESS,
 } from "../../type/admin/team";
 
 export const teamReducer = (
   state = {
-    member: {},
     team: [],
   },
   action
 ) => {
   switch (action.type) {
     case GET_TEAM_REQUEST:
-    case GET_SINGLE_TEAM_REQUEST:
       return {
         ...state,
         loading: true,
@@ -63,12 +58,6 @@ export const teamReducer = (
         loading: false,
         team: action.payload,
       };
-    case GET_SINGLE_TEAM_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        member: action.payload,
-      };
     case DELETE_TEAM_SUCCESS:
       return {
         ...state,
@@ -91,12 +80,6 @@ export const teamReducer = (
     case GET_TEAM_FAIL:
       return {
         team: [],
-        loading: false,
-        error: action.payload,
-      };
-    case GET_SINGLE_TEAM_FAIL:
-      return {
-        member: {},
         loading: false,
         error: action.payload,
       };

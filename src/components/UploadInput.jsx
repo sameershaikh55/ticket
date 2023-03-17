@@ -27,7 +27,7 @@ const UploadInput = ({
         type={type}
         placeholder={placeholder}
         name={name}
-        value={value}
+        // value={(typeof value !== "string" && value) || ""}
         onChange={onChange}
         id={name}
       />

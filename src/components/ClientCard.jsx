@@ -1,180 +1,74 @@
 import React, { useState } from "react";
-import logo from "../assets/logo2.svg";
-import avatar from "../assets/avatar.png";
-import add from "../assets/icons/cross.svg";
 import edit from "../assets/icons/edit.svg";
 import deleteI from "../assets/icons/delete.svg";
-import Modal from "./Modal";
-import Input2 from "./Input2";
-import Textarea from "./Textarea";
-import lock from "../assets/icons/lock.svg";
+import { useDispatch } from "react-redux";
+import { deleteClient } from "../redux/action/admin/clients";
+import ManagerCard from "./ManagerCard";
 
-const ClientCard = () => {
-  const [register, setRegister] = useState(false);
-  const [addTicketHandle, setAddTicketHandle] = useState({
-    name: "",
-    phone: "",
-    email: "",
-  });
-  const fields = [
-    {
-      label: "Name",
-      type: "text",
-      placeholder: "Enter Name",
-      name: "name",
-      class: "col-6",
-    },
-    {
-      label: "Phone",
-      type: "text",
-      placeholder: "Enter Phone",
-      name: "phone",
-      class: "col-6",
-    },
-    {
-      label: "Email",
-      type: "text",
-      placeholder: "Enter Email",
-      name: "email",
-      class: "col-12",
-    },
-    {
-      label: "Password",
-      type: "text",
-      placeholder: "Enter Password",
-      name: "password",
-      icon: lock,
-      class: "col-12",
-    },
-  ];
+const ClientCard = ({
+  name,
+  shortcode,
+  createdAt,
+  logo,
+  id,
+  systems,
+  sla,
+  setEditData,
+  setRegister,
+}) => {
+  const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    setAddTicketHandle({
-      ...addTicketHandle,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const originalDate = new Date(createdAt);
+  const year = originalDate.getFullYear();
+  const month = originalDate.getMonth() + 1;
+  const day = originalDate.getDate();
+  const formattedDate = `${day.toString().padStart(2, "0")}-${month
+    .toString()
+    .padStart(2, "0")}-${year}`;
 
   return (
     <div className="client_card gap-3">
-      {register && (
-        <Modal register={register} setRegister={setRegister}>
-          <form className="form_container pt-4">
-            <div className="container-fluid">
-              <div className="row gy-3">
-                {fields.map((content, idx) => {
-                  return (
-                    <div key={idx} className={content.class}>
-                      {(content.type === "textarea" && (
-                        <Textarea
-                          {...content}
-                          value={addTicketHandle[content.name]}
-                          onChange={(e) => handleChange(e)}
-                        />
-                      )) || (
-                        <Input2
-                          {...content}
-                          value={addTicketHandle[content.name]}
-                          onChange={(e) => handleChange(e)}
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-
-                <div className="col-12">
-                  <button
-                    type="submit"
-                    className="rounded-3 btn-lg rounded-3 border-0 w-100 text-center text-white py-2"
-                  >
-                    Create Project Manager
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </Modal>
-      )}
-
       <div className="d-flex justify-content-between w-100 gap-3">
         <div className="d-flex align-items-center gap-3 w-100">
           <img className="logo" src={logo} alt="" />
           <div className="d-flex align-items-center w-100 gap-3">
+            <input className="w-100 px-2" type="text" value={name} readOnly />
             <input
               className="w-100 px-2"
               type="text"
-              value="KPN Nederland"
-              name=""
-              id=""
+              value={shortcode}
               readOnly
             />
             <input
               className="w-100 px-2"
               type="text"
-              value="KPN"
-              name=""
-              id=""
-              readOnly
-            />
-            <input
-              className="w-100 px-2"
-              type="text"
-              value="01-01-2023"
-              name=""
-              id=""
+              value={formattedDate}
               readOnly
             />
           </div>
         </div>
         <div className="d-flex gap-3">
-          <img style={{ width: "18px" }} src={edit} alt="" />
-          <img style={{ width: "18px" }} src={deleteI} alt="" />
+          <img
+            style={{ width: "18px" }}
+            src={edit}
+            alt=""
+            onClick={() => {
+              setEditData({ shortcode, logo, name, sla, systems, id });
+              setRegister(true);
+            }}
+            className="pointer"
+          />
+          <img
+            onClick={() => dispatch(deleteClient(id, logo))}
+            style={{ width: "18px" }}
+            src={deleteI}
+            alt=""
+            className="pointer"
+          />
         </div>
       </div>
-      <div className="d-flex justify-content-between w-100 gap-3">
-        <div className="d-flex align-items-center gap-3 w-100">
-          <img className="logo" src={avatar} alt="" />
-          <div className="d-flex align-items-center w-100 gap-3">
-            <input
-              className="w-100 px-2"
-              type="text"
-              value="KPN Nederland"
-              name=""
-              id=""
-              readOnly
-            />
-            <input
-              className="w-100 px-2"
-              type="text"
-              value="KPN"
-              name=""
-              id=""
-              readOnly
-            />
-            <input
-              className="w-100 px-2"
-              type="text"
-              value="01-01-2023"
-              name=""
-              id=""
-              readOnly
-            />
-          </div>
-        </div>
-        <div className="d-flex gap-3">
-          <img style={{ width: "18px" }} src={edit} alt="" />
-          <img style={{ width: "18px" }} src={deleteI} alt="" />
-        </div>
-      </div>
-      <div>
-        <button
-          onClick={() => setRegister(true)}
-          className="d-flex align-items-center gap-2 bg-transparent border-0 fw500"
-        >
-          <img style={{ width: "18px" }} src={add} alt="" />
-          Add Project Manager
-        </button>
-      </div>
+
+      <ManagerCard />
     </div>
   );
 };

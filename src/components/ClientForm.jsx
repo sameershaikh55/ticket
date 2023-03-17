@@ -1,33 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import Textarea from "./Textarea";
 import Modal from "./Modal";
 import Input2 from "./Input2";
 import UploadInout from "./UploadInput";
-import share from "../assets/icons/share.svg";
-import {
-  clearErrors,
-  registerTeam,
-  updateTeam,
-} from "../redux/action/admin/team";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
-import { ADD_TEAM_RESET, UPDATE_TEAM_RESET } from "../redux/type/admin/team";
+import share from "../assets/icons/share.svg";
 import SmallLoader from "./SmallLoader";
 import { storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  updateClient,
+  registerClient,
+  clearErrors,
+} from "../redux/action/admin/clients";
+import {
+  ADD_CLIENT_RESET,
+  UPDATE_CLIENT_RESET,
+} from "../redux/type/admin/clients";
 
-const TeamForm = ({ register, setRegister, editData, setEditData }) => {
+const ClientForm = ({ register, setRegister, editData, setEditData }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
-  const { teamLoading, teamError, success } = useSelector(
-    (state) => state.team
+  const { clientLoading, clientError, success } = useSelector(
+    (state) => state.client
   );
 
-  const [addTicketHandle, setAddTicketHandle] = useState({
+  const [inputHandle, setInputHandle] = useState({
     name: "",
-    email: "",
-    picture: "",
-    projects: "",
+    shortcode: "",
+    logo: "",
+    sla: "",
+    systems: "",
   });
 
   const fields = [
@@ -39,34 +44,44 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
       class: "col-6",
     },
     {
-      label: "Email",
+      label: "Shortcode",
       type: "text",
-      placeholder: "Enter Email",
-      name: "email",
+      placeholder: "Enter Shortcode",
+      name: "shortcode",
       class: "col-6",
     },
     {
-      label: "Picture",
+      label: "Logo",
       type: "file",
-      name: "picture",
+      name: "logo",
       class: "col-12",
-      placeholder: "Picture",
+      placeholder: "Upload Logo",
       icon: share,
     },
     {
-      label: "Projects",
-      type: "checks",
-      name: "projects",
+      label: "SLA",
+      type: "textarea",
+      name: "sla",
       class: "col-12",
+      placeholder: "Enter SLA",
+      row: 2,
+    },
+    {
+      label: "Systems",
+      type: "textarea",
+      name: "systems",
+      class: "col-12",
+      placeholder: "Enter Systems",
+      row: 5,
     },
   ];
 
   const handleChange = (e) => {
-    if (e.target.name === "picture") {
+    if (e.target.name === "logo") {
       uploadFiles(e.target.files[0]);
     } else {
-      setAddTicketHandle({
-        ...addTicketHandle,
+      setInputHandle({
+        ...inputHandle,
         [e.target.name]: e.target.value,
       });
     }
@@ -74,20 +89,20 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
 
   // IMAGE UPLOAD TO FIREBASE
   const uploadFiles = (file) => {
-    setAddTicketHandle({
-      ...addTicketHandle,
-      picture: "loading...",
+    setInputHandle({
+      ...inputHandle,
+      logo: "loading...",
     });
 
     if (!file) {
-      setAddTicketHandle({
-        ...addTicketHandle,
-        picture: "file not found",
+      setInputHandle({
+        ...inputHandle,
+        logo: "file not found",
       });
       return;
     }
 
-    const storageRef = ref(storage, `team/${file.name}`);
+    const storageRef = ref(storage, `client/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -96,9 +111,9 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
       (error) => console.log(error),
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setAddTicketHandle({
-            ...addTicketHandle,
-            picture: downloadURL,
+          setInputHandle({
+            ...inputHandle,
+            logo: downloadURL,
           });
         });
       }
@@ -110,19 +125,17 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
 
     if (editData) {
       dispatch(
-        updateTeam(
+        updateClient(
           {
-            ...addTicketHandle,
-            projects: "kpn-1, kpn-2",
+            ...inputHandle,
           },
           editData.id
         )
       );
     } else {
       dispatch(
-        registerTeam({
-          ...addTicketHandle,
-          projects: "kpn-1, kpn-2",
+        registerClient({
+          ...inputHandle,
           createdAt: new Date().toISOString(),
         })
       );
@@ -130,42 +143,46 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
   };
 
   useEffect(() => {
-    if (teamError) {
-      alert.error(teamError);
+    if (clientError) {
+      alert.error(clientError);
       dispatch(clearErrors());
     }
 
     if (success) {
       if (editData) {
         alert.success("Member edited!");
-        dispatch({ type: UPDATE_TEAM_RESET });
+        dispatch({ type: UPDATE_CLIENT_RESET });
       } else {
         alert.success("Member created!");
-        dispatch({ type: ADD_TEAM_RESET });
+        dispatch({ type: ADD_CLIENT_RESET });
       }
 
       setEditData(null);
       setRegister(false);
-      setAddTicketHandle({
+      setInputHandle({
         name: "",
-        email: "",
-        picture: "",
-        projects: "",
+        shortcode: "",
+        logo: "",
+        sla: "",
+        systems: "",
       });
     }
-  }, [dispatch, alert, success, teamError]);
+  }, [dispatch, alert, success, clientError]);
 
   useEffect(() => {
     if (editData) {
-      const { name, email, picture, projects } = editData;
-      setAddTicketHandle({
+      const { name, shortcode, logo, sla, systems } = editData;
+      setInputHandle({
         name,
-        email,
-        picture,
-        projects,
+        shortcode,
+        logo,
+        sla,
+        systems,
       });
     }
   }, [editData]);
+
+  console.log(inputHandle);
 
   return (
     <>
@@ -177,43 +194,23 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
                 {fields.map((content, idx) => {
                   return (
                     <div key={idx} className={content.class}>
-                      {(content.type === "checks" && (
-                        <div className="checks">
-                          <label className="main" htmlFor="">
-                            {content.label}
-                          </label>
-
-                          <div className="check">
-                            {[1, 1, 1].map((_, i) => {
-                              return (
-                                <div
-                                  key={i}
-                                  className="d-flex align-items-center gap-2"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    id={`myCheckbox${i}`}
-                                    name={`myCheckbox${i}`}
-                                  />
-                                  <label htmlFor={`myCheckbox${i}`}>
-                                    KPN-1
-                                  </label>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
+                      {(content.type === "textarea" && (
+                        <Textarea
+                          {...content}
+                          value={inputHandle[content.name]}
+                          onChange={(e) => handleChange(e)}
+                        />
                       )) ||
                         (content.type === "file" && (
                           <UploadInout
                             {...content}
-                            value={addTicketHandle[content.name]}
+                            value={inputHandle[content.name]}
                             onChange={(e) => handleChange(e)}
                           />
                         )) || (
                           <Input2
                             {...content}
-                            value={addTicketHandle[content.name]}
+                            value={inputHandle[content.name]}
                             onChange={(e) => handleChange(e)}
                           />
                         )}
@@ -223,12 +220,12 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
 
                 <div className="col-12">
                   <button
-                    disabled={(teamLoading && true) || false}
+                    disabled={(clientLoading && true) || false}
                     type="submit"
                     className="rounded-3 btn-lg rounded-3 border-0 w-100 text-center text-white py-2"
                   >
-                    {(teamLoading && <SmallLoader />) || (
-                      <div>{(editData && "Edit") || "Add"} team member</div>
+                    {(clientLoading && <SmallLoader />) || (
+                      <div>{(editData && "Edit") || "Create"} ticket</div>
                     )}
                   </button>
                 </div>
@@ -241,4 +238,4 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
   );
 };
 
-export default TeamForm;
+export default ClientForm;

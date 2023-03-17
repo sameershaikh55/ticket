@@ -1,116 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useAlert } from "react-alert";
+import { useDispatch, useSelector } from "react-redux";
 import cross from "../../assets/icons/crossW.svg";
 import ClientCard from "../../components/ClientCard";
-import Modal from "../../components/Modal";
-import Input2 from "../../components/Input2";
-import UploadInout from "../../components/UploadInput";
-import share from "../../assets/icons/share.svg";
-import Textarea from "../../components/Textarea";
+import ClientForm from "../../components/ClientForm";
+import Loader from "../../components/Loader";
+import { clearErrors, getClient } from "../../redux/action/admin/clients";
+import { DELETE_CLIENT_RESET } from "../../redux/type/admin/clients";
 
 const Client = () => {
   const [register, setRegister] = useState(false);
-  const [addTicketHandle, setAddTicketHandle] = useState({
-    name: "",
-    shortcode: "",
-    logo: "",
-    sla: "",
-    systems: "",
-  });
+  const [editData, setEditData] = useState(false);
 
-  const fields = [
-    {
-      label: "Name",
-      type: "text",
-      placeholder: "KPN Nederland",
-      name: "name",
-      class: "col-6",
-    },
-    {
-      label: "Shortcode",
-      type: "text",
-      placeholder: "KPN",
-      name: "shortcode",
-      class: "col-6",
-    },
-    {
-      label: "Logo",
-      type: "file",
-      name: "logo",
-      class: "col-12",
-      placeholder: "Logo",
-      icon: share,
-    },
-    {
-      label: "SLA",
-      type: "textarea",
-      name: "sla",
-      class: "col-12",
-      placeholder: "SLA",
-      row: 2,
-    },
-    {
-      label: "Systems",
-      type: "textarea",
-      name: "systems",
-      class: "col-12",
-      placeholder: "Systems",
-      row: 5,
-    },
-  ];
+  const dispatch = useDispatch();
+  const alert = useAlert();
 
-  const handleChange = (e) => {
-    setAddTicketHandle({
-      ...addTicketHandle,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const { clients, error, loading, clientDeleted } = useSelector(
+    (state) => state.client
+  );
+
+  useEffect(() => {
+    dispatch(getClient());
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
+
+    if (clientDeleted) {
+      alert.success("Member deleted!");
+      dispatch({ type: DELETE_CLIENT_RESET });
+    }
+  }, [dispatch, alert, clientDeleted, error]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="admin_clients_container">
       {register && (
-        <Modal register={register} setRegister={setRegister}>
-          <form className="form_container pt-4">
-            <div className="container-fluid">
-              <div className="row gy-3">
-                {fields.map((content, idx) => {
-                  return (
-                    <div key={idx} className={content.class}>
-                      {(content.type === "textarea" && (
-                        <Textarea
-                          {...content}
-                          value={addTicketHandle[content.name]}
-                          onChange={(e) => handleChange(e)}
-                        />
-                      )) ||
-                        (content.type === "file" && (
-                          <UploadInout
-                            {...content}
-                            value={addTicketHandle[content.name]}
-                            onChange={(e) => handleChange(e)}
-                          />
-                        )) || (
-                          <Input2
-                            {...content}
-                            value={addTicketHandle[content.name]}
-                            onChange={(e) => handleChange(e)}
-                          />
-                        )}
-                    </div>
-                  );
-                })}
-
-                <div className="col-12">
-                  <button
-                    type="submit"
-                    className="rounded-3 btn-lg rounded-3 border-0 w-100 text-center text-white py-2"
-                  >
-                    Create ticket
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </Modal>
+        <ClientForm
+          register={register}
+          setRegister={setRegister}
+          editData={editData}
+          setEditData={setEditData}
+        />
       )}
 
       <div className="container-fluid">
@@ -126,9 +63,20 @@ const Client = () => {
           </div>
 
           <div className="clients_container mt-3">
-            {[1, 1, 1].map(() => {
-              return <ClientCard />;
-            })}
+            {(clients.length &&
+              clients.map((content, i) => {
+                return (
+                  <div key={i}>
+                    <ClientCard
+                      {...content}
+                      setEditData={setEditData}
+                      setRegister={setRegister}
+                    />
+                  </div>
+                );
+              })) || (
+              <div className="text-white text-center py-3">no data found</div>
+            )}
           </div>
         </div>
       </div>

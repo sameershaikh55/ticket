@@ -6,11 +6,15 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import { modeReducer } from "./reducer/mode";
 import { userReducer } from "./reducer/admin/auth";
 import { teamReducer } from "./reducer/admin/team";
+import { clientReducer } from "./reducer/admin/clients";
+import { managersReducer } from "./reducer/admin/managers";
 
 const reducer = combineReducers({
   mode: modeReducer,
   adminUser: userReducer,
   team: teamReducer,
+  client: clientReducer,
+  manager: managersReducer,
 });
 
 let initialState = {};
