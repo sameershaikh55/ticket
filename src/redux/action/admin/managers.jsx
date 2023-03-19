@@ -25,6 +25,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { deleteFileFromUrl } from "../../../utils/deleteImagefromStorage";
+import { signUpWithEmailPasswordAndRole } from "../../../utils/createManagerAuth";
 
 const collectionName = "manager";
 
@@ -33,10 +34,14 @@ export const registerManager = (managerData) => async (dispatch) => {
   try {
     dispatch({ type: ADD_MANAGER_REQUEST });
 
-    const docRef = await addDoc(
-      collection(database, collectionName),
-      managerData
-    );
+    const maanagerAccountData = await signUpWithEmailPasswordAndRole({
+      email: managerData.email,
+      password: managerData.password,
+    });
+    const docRef = await addDoc(collection(database, collectionName), {
+      ...managerData,
+      uid: maanagerAccountData.uid,
+    });
     const docSnapshot = await getDoc(docRef);
     const addedData = { id: docSnapshot.id, ...docSnapshot.data() };
 

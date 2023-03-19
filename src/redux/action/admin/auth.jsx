@@ -9,16 +9,28 @@ import {
   LOGOUT_FAIL,
   LOGOUT_SUCCESS,
 } from "../../type/admin/auth";
-import { auth } from "../../../firebase";
+import { auth, database } from "../../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { collection, getDocs } from "firebase/firestore";
 
 // Login
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: LOGIN_REQUEST });
 
-    const { user } = await signInWithEmailAndPassword(auth, email, password);
-    dispatch({ type: LOGIN_SUCCESS, payload: { email: user } });
+    const querySnapshot = await getDocs(collection(database, "admins"));
+    const admins = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const isPresent = admins.some((admin) => admin.email === email);
+
+    if (isPresent) {
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      dispatch({ type: LOGIN_SUCCESS, payload: { email: user } });
+    } else {
+      dispatch({ type: LOGIN_FAIL, payload: "USER-NOT-FOUND" });
+    }
   } catch (error) {
     const errorCode = error.code.split("/");
     dispatch({ type: LOGIN_FAIL, payload: errorCode[1] });
