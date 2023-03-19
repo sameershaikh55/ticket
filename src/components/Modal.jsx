@@ -1,6 +1,5 @@
 import React from "react";
 import cross from "../assets/icons/cross.svg";
-// import SmallLoader from "../components/SmallLoader";
 
 const Modal = ({ children, register, setRegister, noCross }) => {
   return (

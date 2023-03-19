@@ -4,11 +4,10 @@ import edit from "../../assets/icons/edit.svg";
 import doubleCheck from "../../assets/icons/doubleCheck.svg";
 import avatar from "../../assets/avatar.png";
 import deleteI from "../../assets/icons/delete.svg";
-import excelemation from "../../assets/icons/excelemation.svg";
 import cross from "../../assets/icons/cross.svg";
 import { Link } from "react-router-dom";
-import Modal from "../../components/Modal";
 import SelectBox2 from "../../components/Selectbox2";
+import DeleteModal from "../../components/DeleteModal";
 
 const TicketDetail = () => {
   const [register, setRegister] = useState(false);
@@ -111,35 +110,12 @@ const TicketDetail = () => {
 
   return (
     <div className="ticket_container d-flex flex-column">
-      {register && (
-        <Modal noCross register={register} setRegister={setRegister}>
-          <div className="container-fluid">
-            <div className="d-flex align-items-center gap-4">
-              <img src={excelemation} alt="" />
-              <p className="mb-0">Remove BSL-1?</p>
-            </div>
-            <p className="mt-4">
-              You are about to permanently delete this ticket including
-              comments, attachments and all data.
-            </p>
-            <p className="mt-4">
-              If you’re not sure, you can resolve or close the ticket instead.{" "}
-            </p>
-
-            <div className="d-flex justify-content-end mt-4 gap-3">
-              <button className="text-white bg-danger px-4 rounded-3 border-0 py-1">
-                Delete
-              </button>
-              <button
-                onClick={() => setRegister(false)}
-                className="px-4 rounded-3 border-0 py-1 bg-transparent"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </Modal>
-      )}
+      <DeleteModal
+        isOpen={register}
+        setIsOpen={setRegister}
+        title="BSL-1"
+        action={() => alert(";p;")}
+      />
 
       <Link to="/">
         <img className="cross" src={cross} alt="" />
