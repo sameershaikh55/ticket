@@ -49,7 +49,7 @@ const ManagerCardInside = ({
             src={edit}
             alt=""
             onClick={() => {
-              setEditManagerData({ ...content });
+              setEditManagerData({ ...content, picture, name, email, phone });
               setManagerRegister(true);
             }}
           />

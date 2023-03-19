@@ -3,17 +3,13 @@ import { Navigate } from "react-router-dom";
 import Loader from "../Loader";
 
 const PrivateRoute = ({ children }) => {
-  const adminUser = useSelector((state) => state.adminUser);
   const clientUser = useSelector((state) => state.clientUser);
 
-  if (adminUser?.loading === false) {
-    if (!adminUser?.isAuthenticated) {
-      return <Navigate to="/admin/login" replace />;
-    }
-
-    return children;
-  } else if (clientUser?.loading === false) {
-    if (!clientUser?.isAuthenticated) {
+  if (clientUser?.loading === false) {
+    if (
+      !clientUser?.isAuthenticated ||
+      clientUser?.user.email !== "user@user.com"
+    ) {
       return <Navigate to="/login" replace />;
     }
 

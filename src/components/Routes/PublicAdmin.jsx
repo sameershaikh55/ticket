@@ -3,13 +3,13 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 const Public = ({ children }) => {
-  const clientUser = useSelector((state) => state.clientUser);
+  const adminUser = useSelector((state) => state.adminUser);
 
   if (
-    clientUser?.isAuthenticated &&
-    clientUser?.user.email === "user@user.com"
+    adminUser?.isAuthenticated &&
+    adminUser?.user.email === "admin@admin.com"
   ) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/admin/clients" replace />;
   }
 
   return children;

@@ -7,8 +7,8 @@ const AdminRoute = ({ children }) => {
 
   if (adminUser?.loading === false) {
     if (
-      !adminUser?.isAuthenticated &&
-      adminUser.user.email === "user@user.com"
+      !adminUser?.isAuthenticated ||
+      adminUser?.user.email !== "admin@admin.com"
     ) {
       return <Navigate to="/admin/login" replace />;
     }

@@ -4,6 +4,8 @@ import { loadUser } from "./redux/action/admin/auth";
 import { dark, light } from "./redux/action/mode";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import PublicRoute from "./components/Routes/PublicRoute";
+import AdminRoute from "./components/Routes/AdminRoute";
+import PublicAdminRoute from "./components/Routes/PublicAdmin";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -24,7 +26,6 @@ import TicketDetail from "./pages/client/TicketDetail";
 
 import Loader from "./components/Loader";
 import Teams from "./pages/admin/Teams";
-import AdminRoute from "./components/Routes/AdminRoute";
 
 const AppRoutes = () => {
   const [loading, setLoading] = useState(true);
@@ -64,9 +65,9 @@ const AppRoutes = () => {
           <Route
             path="/admin/login"
             element={
-              <PublicRoute>
+              <PublicAdminRoute>
                 <AdminLogin />
-              </PublicRoute>
+              </PublicAdminRoute>
             }
           />
 
@@ -104,27 +105,32 @@ const AppRoutes = () => {
           <Route
             path="/admin/clients"
             element={
-              <PrivateRoute>
-                <AdminRoute>
-                  <AdminLayout>
-                    <Clients />
-                  </AdminLayout>
-                </AdminRoute>
-              </PrivateRoute>
+              <AdminRoute>
+                <AdminLayout>
+                  <Clients />
+                </AdminLayout>
+              </AdminRoute>
             }
           />
           <Route
             path="/admin/team"
             element={
-              <PrivateRoute>
-                <AdminRoute>
-                  <AdminLayout>
-                    <Teams />
-                  </AdminLayout>
-                </AdminRoute>
-              </PrivateRoute>
+              <AdminRoute>
+                <AdminLayout>
+                  <Teams />
+                </AdminLayout>
+              </AdminRoute>
             }
           />
+
+          <Route
+            path="*"
+            element={
+              <PublicRoute>
+                <ClientLogin />
+              </PublicRoute>
+            }
+          ></Route>
         </Routes>
       </Layout>
     </Router>
