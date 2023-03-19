@@ -24,6 +24,7 @@ import TicketDetail from "./pages/client/TicketDetail";
 
 import Loader from "./components/Loader";
 import Teams from "./pages/admin/Teams";
+import AdminRoute from "./components/Routes/AdminRoute";
 
 const AppRoutes = () => {
   const [loading, setLoading] = useState(true);
@@ -104,9 +105,11 @@ const AppRoutes = () => {
             path="/admin/clients"
             element={
               <PrivateRoute>
-                <AdminLayout>
-                  <Clients />
-                </AdminLayout>
+                <AdminRoute>
+                  <AdminLayout>
+                    <Clients />
+                  </AdminLayout>
+                </AdminRoute>
               </PrivateRoute>
             }
           />
@@ -114,9 +117,11 @@ const AppRoutes = () => {
             path="/admin/team"
             element={
               <PrivateRoute>
-                <AdminLayout>
-                  <Teams />
-                </AdminLayout>
+                <AdminRoute>
+                  <AdminLayout>
+                    <Teams />
+                  </AdminLayout>
+                </AdminRoute>
               </PrivateRoute>
             }
           />
