@@ -20,11 +20,23 @@ export const login = (email, password) => async (dispatch) => {
       ...doc.data(),
     }));
 
-    const isAuthentic = managersData.some(
+    const isAuthentic = managersData.filter(
       (content) => content.email === email && content.password === password
     );
 
-    if (isAuthentic) {
+    if (isAuthentic.length) {
+      const q2 = collection(database, "client");
+      const querySnapshot2 = await getDocs(q2);
+      const managersData2 = querySnapshot2.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      const clientData = managersData2.filter(
+        (content) => content.id === isAuthentic[0].client
+      );
+      localStorage.setItem("user", JSON.stringify(clientData[0]));
+
       const { user } = await signInWithEmailAndPassword(
         auth,
         (email = "user@user.com"),

@@ -1175,7 +1175,7 @@ input[type="date"] {
               color: #fff;
               text-align: center;
               font-size: 16px;
-              line-height: 18px;
+              line-height: 15px;
               background-color: #000;
               border-radius: 2px;
             }
@@ -1196,7 +1196,6 @@ input[type="date"] {
                 background: #dce0e5;
               }
               li:nth-child(2) {
-                background: #f04d4d;
                 color: #fff;
               }
             }
@@ -1231,6 +1230,9 @@ input[type="date"] {
 
       .todo_actions {
         padding-top: 0.5rem;
+        position: absolute;
+        bottom: 2rem;
+        left: 1.5rem;
 
         button {
           display: flex;
@@ -1334,6 +1336,7 @@ input[type="date"] {
   }
 
   .dashboard_container {
+    position: relative;
     min-height: calc(100vh - 2rem);
     width: 100%;
     padding: 1.4rem 0rem;
@@ -1413,7 +1416,7 @@ input[type="date"] {
               color: #fff;
               text-align: center;
               font-size: 16px;
-              line-height: 18px;
+              line-height: 15px;
               background-color: #000;
               border-radius: 2px;
             }
@@ -1434,7 +1437,6 @@ input[type="date"] {
                 background: #dce0e5;
               }
               li:nth-child(2) {
-                background: #f04d4d;
                 color: #fff;
               }
             }
@@ -1469,6 +1471,9 @@ input[type="date"] {
 
       .todo_actions {
         padding-top: 0.5rem;
+        position: absolute;
+        bottom: 2rem;
+        left: 1.5rem;
 
         button {
           display: flex;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import avatar from "../../assets/avatar.png";
 import mailPhone from "../../assets/icons/mailPhone.svg";
@@ -6,10 +6,32 @@ import mailPhoneD from "../../assets/icons/mailPhoneD.svg";
 import star from "../../assets/icons/mode/star.svg";
 import sun from "../../assets/icons/mode/sun.svg";
 import { dark, light } from "../../redux/action/mode";
+import { logout } from "../../redux/action/admin/auth";
+import Loader from "../../components/Loader";
+import { useGetManagers } from "../../utils/hooks/useGetManagers";
+import { getManager } from "../../redux/action/admin/managers";
 
 const Settings = () => {
   const { mode } = useSelector((state) => state.mode);
   const dispatch = useDispatch();
+
+  const { loading } = useSelector((state) => state.manager);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    if (!Object.keys(user).length) {
+      dispatch(logout());
+    } else {
+      dispatch(getManager());
+    }
+  }, []);
+
+  const managers = useGetManagers(user.id);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="settings_container">
@@ -19,22 +41,19 @@ const Settings = () => {
             <div className="w-100">
               <h3 className="color9 fw400 text-uppercase">Project leaders</h3>
               <div className="line mt-2 mb-3" />
-              <div className="d-flex align-items-center gap-3">
-                <img src={avatar} alt="" />
-                <p className="color9 mb-0 f14">
-                  <span className="pe-2">Jan Smith</span>|
-                  <span className="px-2">jan.van.smith@bdsl.nl</span>|
-                  <span className="px-2">06-12 345 678</span>
-                </p>
-              </div>
-              <div className="d-flex align-items-center gap-3 mt-3">
-                <img src={avatar} alt="" />
-                <p className="color9 mb-0 f14">
-                  <span className="pe-2">Jan Smith</span>|
-                  <span className="px-2">jan.van.smith@bdsl.nl</span>|
-                  <span className="px-2">06-12 345 678</span>
-                </p>
-              </div>
+              {managers.map((content, i) => {
+                const { name, email, phone } = content;
+                return (
+                  <div key={i} className="d-flex align-items-center gap-3">
+                    <img src={avatar} alt="" />
+                    <p className="color9 mb-0 f14">
+                      <span className="pe-2">{name}</span>|
+                      <span className="px-2">{email}</span>|
+                      <span className="px-2">{phone}</span>
+                    </p>
+                  </div>
+                );
+              })}
             </div>
             <div className="w-100 row gy-4">
               <div className="col-12 col-md-6">
@@ -43,24 +62,27 @@ const Settings = () => {
 
                 <div className="d-flex flex-column gap-3">
                   <div className="color9 f15">
-                    Respond within
+                    {user.sla}
+
+                    {/* Respond within
                     <span className="time_bg rounded-1 p-1 ms-2 text-dark">
                       24 Hours
-                    </span>
+                    </span> */}
                   </div>
-                  <div className="color9 f15">
+                  {/* <div className="color9 f15">
                     Looptijd
                     <span className="time_bg rounded-1 p-1 ms-2 text-dark">
                       1 jaar
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="col-12 col-md-6">
                 <h4 className="color9 fw400 text-uppercase">Systems</h4>
                 <div className="line mt-2 mb-3" />
+                <div className="color9">{user.systems}</div>
 
-                <ul className="list-unstyled color9 f15">
+                {/* <ul className="list-unstyled color9 f15">
                   <li>
                     <strong className="me-2">Template:</strong>
                     Avada
@@ -92,7 +114,7 @@ const Settings = () => {
                     <strong className="me-2">SSL / LetsEncrypt:</strong>
                     Cloudflare, Inc.
                   </li>
-                </ul>
+                </ul> */}
               </div>
             </div>
             <div className="w-100 pb-2">

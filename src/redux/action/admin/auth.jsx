@@ -56,6 +56,11 @@ export const logout = () => async (dispatch) => {
   try {
     await auth.signOut(); // sign out the current user
     dispatch({ type: LOGOUT_SUCCESS });
+
+    if (localStorage.getItem("user")) {
+      // User variable exists in localStorage, so remove it
+      localStorage.removeItem("user");
+    }
   } catch (error) {
     const errorCode = error.code.split("/");
     dispatch({ type: LOGOUT_FAIL, payload: errorCode[1] });
