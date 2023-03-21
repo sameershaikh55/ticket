@@ -73,7 +73,7 @@ const AppRoutes = () => {
 
           {/* USER ROUTES */}
           <Route
-            path="/ticket"
+            path="/ticket/:id"
             element={
               <PrivateRoute>
                 <TicketDetail />

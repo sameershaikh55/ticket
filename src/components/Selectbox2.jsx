@@ -18,20 +18,18 @@ const SelectBox2 = ({ state, label, name, options, onChange }) => {
     };
   }, []);
 
-  const filteredData = options.filter((obj) =>
-    obj.html.props.children.includes(state)
-  );
+  const filteredData = options.filter((obj) => obj.value === state);
 
   return (
     <div className="select-box-container">
       <div
         style={{
           border: "none",
-          background: filteredData[0].bg,
+          background: filteredData[0]?.bg,
           padding: "2px 6px",
           fontSize: "14px",
           minWidth: "150px",
-          color: (filteredData[0].bg === "#ffea4b" && "#000") || "#fff",
+          color: (filteredData[0]?.bg === "#ffea4b" && "#000") || "#fff",
         }}
         className="select-box-selected-option"
         onClick={() => {
@@ -43,7 +41,7 @@ const SelectBox2 = ({ state, label, name, options, onChange }) => {
       >
         {state}
         <IoIosArrowDown
-          color={(filteredData[0].bg === "#ffea4b" && "#000") || "#fff"}
+          color={(filteredData[0]?.bg === "#ffea4b" && "#000") || "#fff"}
           size={16}
           className="select-box-icon"
         />

@@ -1,112 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import check from "../../assets/check.svg";
 import edit from "../../assets/icons/edit.svg";
 import doubleCheck from "../../assets/icons/doubleCheck.svg";
 import avatar from "../../assets/avatar.png";
 import deleteI from "../../assets/icons/delete.svg";
 import cross from "../../assets/icons/cross.svg";
-import { Link } from "react-router-dom";
-import SelectBox2 from "../../components/Selectbox2";
+import { Link, useParams } from "react-router-dom";
 import DeleteModal from "../../components/DeleteModal";
+import Loader from "../../components/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { getSingleTicket } from "../../redux/action/client/ticket";
+import { getTeam } from "../../redux/action/admin/team";
+import { getDateTime } from "../../utils/getDateTime";
+import DetailForm from "../../components/DetailForm";
 
 const TicketDetail = () => {
-  const [register, setRegister] = useState(false);
-  const [addTicketHandle, setAddTicketHandle] = useState({
-    priority: "Low",
-    type: "Issue",
-    status: "To Do",
-  });
-  const fields = [
-    {
-      label: "Priority",
-      name: "priority",
-      options: [
-        {
-          value: "Low",
-          html: (
-            <div className="d-flex align-items-center gap-2">
-              <div className="yellow"></div>Low
-            </div>
-          ),
-          bg: "#ffea4b",
-        },
-        {
-          value: "Medium",
-          html: (
-            <div className="d-flex align-items-center gap-2">
-              <div className="orange"></div>Medium
-            </div>
-          ),
-          bg: "#fd8329",
-        },
-        {
-          value: "High",
-          html: (
-            <div className="d-flex align-items-center gap-2">
-              <div className="red"></div>High
-            </div>
-          ),
-          bg: "#f04d4d",
-        },
-      ],
-    },
-    {
-      label: "Type",
-      name: "type",
-      options: [
-        {
-          value: "Issue",
-          html: <>Issue</>,
-          bg: "#2e343d",
-        },
-        {
-          value: "Question",
-          html: <>Question</>,
-          bg: "#2e343d",
-        },
-      ],
-    },
-    {
-      label: "Status",
-      name: "status",
-      options: [
-        {
-          value: "To Do",
-          html: (
-            <div className="d-flex align-items-center gap-2">
-              <div className="cream"></div>To Do
-            </div>
-          ),
-          bg: "#facea0",
-        },
-        {
-          value: "In Progress",
-          html: (
-            <div className="d-flex align-items-center gap-2">
-              <div className="blue"></div>In Progress
-            </div>
-          ),
-          bg: "#4f8df2",
-        },
-        {
-          value: "Done",
-          html: (
-            <div className="d-flex align-items-center gap-2">
-              <div className="green"></div>Done
-            </div>
-          ),
-          bg: "#3eb45e",
-        },
-      ],
-    },
-  ];
+  const { id } = useParams();
+  const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    setAddTicketHandle({
-      ...addTicketHandle,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const { singleTicket, loading } = useSelector((state) => state.ticket);
+  const { team, ...teamRest } = useSelector((state) => state.team);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const auth = JSON.parse(localStorage.getItem("auth"));
+
+  const [register, setRegister] = useState(false);
+
+  useEffect(() => {
+    dispatch(getTeam());
+  }, []);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getSingleTicket(id));
+    }
+  }, [id]);
+
+  if (loading && teamRest.loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="ticket_container d-flex flex-column">
@@ -123,11 +54,9 @@ const TicketDetail = () => {
 
       <div className="d-flex align-items-center color1 gap-2">
         <img style={{ maxWidth: "20px" }} src={check} alt="" />
-        <p className="mb-0 fw400 f15 opacity-50">Ticket: KPN-1</p>
+        <p className="mb-0 fw400 f15 opacity-50">Ticket: {user.name}</p>
       </div>
-      <p className="f18 mt-1">
-        Graag de footer tekst aanpassen en volgende logo’s toevoegen.
-      </p>
+      <p className="f18 mt-1">{singleTicket.subject}</p>
 
       <div className="main_chat_container">
         <div className="row">
@@ -197,87 +126,81 @@ const TicketDetail = () => {
                 <div>
                   <h6 className="mb-0 fw400 px-2 pt-3 pb-2">Details</h6>
                   <hr className="my-1" />
-                  <ul className="list-unstyled d-flex flex-column gap-3 px-2 py-2 mb-0">
-                    {fields.map((content, i) => {
-                      return (
-                        <li
-                          key={i}
-                          className="d-flex align-items-center justify-content-between"
-                        >
-                          <p className="mb-0">{content.label}</p>
-                          <div>
-                            <SelectBox2
-                              {...content}
-                              state={addTicketHandle[content.name]}
-                              onChange={(e) => handleChange(e)}
-                            />
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  {Object.keys(singleTicket).length && (
+                    <DetailForm singleTicket={singleTicket} />
+                  )}
                   <hr className="my-1" />
                   <ul className="list-unstyled d-flex flex-column gap-2 px-2 py-2 mb-0">
                     <li className="d-flex align-items-center justify-content-between">
                       <p className="mb-0">Team</p>
                       <div>
-                        <img
-                          style={{
-                            marginRight: "-10px",
-                            width: "25px",
-                            height: "25px",
-                          }}
-                          src={avatar}
-                          alt=""
-                        />
-                        <img
-                          style={{
-                            marginRight: "-10px",
-                            width: "25px",
-                            height: "25px",
-                          }}
-                          src={avatar}
-                          alt=""
-                        />
-                        <img
-                          style={{
-                            width: "25px",
-                            height: "25px",
-                          }}
-                          src={avatar}
-                          alt=""
-                        />
+                        {team.map((content, i) => {
+                          return (
+                            <img
+                              key={i}
+                              style={{
+                                marginRight:
+                                  (i + 1 === team.length && "0px") || "-10px",
+                                width: "25px",
+                                height: "25px",
+                              }}
+                              src={content.picture}
+                              className="rounded-circle"
+                              alt=""
+                            />
+                          );
+                        })}
                       </div>
                     </li>
                     <li className="d-flex align-items-center justify-content-between">
                       <p className="mb-0">Reporter</p>
-                      <p className="mb-0 f12">Jan Smith</p>
+                      <p className="mb-0 f12">{singleTicket.reporter}</p>
                     </li>
                   </ul>
                 </div>
                 <div className="px-2 py-1">
-                  <button
-                    onClick={() => setRegister(true)}
-                    className="border-0 bg-transparent d-flex gap-1 align-items-center"
-                  >
-                    <img src={deleteI} alt="" />
-                    Remove ticket
-                  </button>
+                  {auth?.projects && (
+                    <button
+                      onClick={() => setRegister(true)}
+                      className="border-0 bg-transparent d-flex gap-1 align-items-center"
+                    >
+                      <img src={deleteI} alt="" />
+                      Remove ticket
+                    </button>
+                  )}
                 </div>
               </div>
               <div className="report_container mt-4 py-3">
                 <ul className="d-flex flex-column gap-3 mb-0 pe-3">
                   <li className="completed d-flex justify-content-between align-items-center">
                     <p className="mb-0 f14">Created</p>
-                    <p className="mb-0 f12">21-01-2023 - 14:32 uur</p>
+                    <p className="mb-0 f12">
+                      {getDateTime(singleTicket.createdAt)}
+                    </p>
                   </li>
-                  <li className="completed d-flex justify-content-between align-items-center">
+                  <li
+                    className={`d-flex justify-content-between align-items-center ${
+                      (singleTicket?.updatedAt && "completed") || ""
+                    }`}
+                  >
                     <p className="mb-0 f14">Updated</p>
-                    <p className="mb-0 f12">21-01-2023 - 14:32 uur</p>
+                    <p className="mb-0 f12">
+                      {singleTicket?.updatedAt
+                        ? getDateTime(singleTicket.updatedAt)
+                        : ""}
+                    </p>
                   </li>
-                  <li className="d-flex justify-content-between align-items-center">
+                  <li
+                    className={`d-flex justify-content-between align-items-center ${
+                      (singleTicket?.resolvedAt && "completed") || ""
+                    }`}
+                  >
                     <p className="mb-0 f14">Resolved</p>
-                    <p className="mb-0 f14"></p>
+                    <p className="mb-0 f14">
+                      {singleTicket?.resolvedAt
+                        ? getDateTime(singleTicket.resolvedAt)
+                        : ""}
+                    </p>
                   </li>
                 </ul>
               </div>

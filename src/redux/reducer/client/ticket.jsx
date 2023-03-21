@@ -14,16 +14,21 @@ import {
   UPDATE_TICKET_SUCCESS,
   UPDATE_TICKET_FAIL,
   UPDATE_TICKET_RESET,
+  GET_SINGLE_TICKET_FAIL,
+  GET_SINGLE_TICKET_REQUEST,
+  GET_SINGLE_TICKET_SUCCESS,
 } from "../../type/client/ticket";
 
 export const ticketReducer = (
   state = {
+    singleTicket: {},
     ticket: [],
   },
   action
 ) => {
   switch (action.type) {
     case GET_TICKET_REQUEST:
+    case GET_SINGLE_TICKET_REQUEST:
       return {
         ...state,
         loading: true,
@@ -51,6 +56,9 @@ export const ticketReducer = (
             ? (content = action.payload)
             : content
         ),
+        singleTicket:
+          (state.singleTicket.id === action.payload.id && action.payload) ||
+          state.singleTicket,
       };
     case GET_TICKET_SUCCESS:
       return {
@@ -63,6 +71,12 @@ export const ticketReducer = (
         ...state,
         ticketDeleted: true,
         ticket: state.ticket.filter(({ id }) => id !== action.payload),
+      };
+    case GET_SINGLE_TICKET_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        singleTicket: action.payload,
       };
     case ADD_TICKET_FAIL:
     case UPDATE_TICKET_FAIL:
@@ -80,6 +94,12 @@ export const ticketReducer = (
     case GET_TICKET_FAIL:
       return {
         ticket: [],
+        loading: false,
+        error: action.payload,
+      };
+    case GET_SINGLE_TICKET_FAIL:
+      return {
+        singleTicket: {},
         loading: false,
         error: action.payload,
       };

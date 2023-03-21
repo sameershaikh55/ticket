@@ -36,6 +36,7 @@ export const login = (email, password) => async (dispatch) => {
         (content) => content.id === isAuthentic[0].client
       );
       localStorage.setItem("user", JSON.stringify(clientData[0]));
+      localStorage.setItem("auth", JSON.stringify(isAuthentic[0]));
 
       const { user } = await signInWithEmailAndPassword(
         auth,

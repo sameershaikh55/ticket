@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import threeDots from "../assets/icons/threeDots.svg";
+import { getDateTime } from "../utils/getDateTime";
 
 const TaskCard = ({
   type,
@@ -9,28 +10,17 @@ const TaskCard = ({
   createdAt,
   setEditData,
   setRegister,
+  id,
   ...content
 }) => {
   const navigate = useNavigate();
-
-  const originalDate = new Date(createdAt);
-  const year = originalDate.getFullYear();
-  const month = originalDate.getMonth() + 1;
-  const day = originalDate.getDate();
-  const formattedDate = `${day.toString().padStart(2, "0")}-${month
-    .toString()
-    .padStart(2, "0")}-${year}`;
-
-  const originalTime = new Date(createdAt);
-  const hour = originalTime.getHours() + 1;
-  const minutes = originalTime.getMinutes() + 1;
 
   const user = JSON.parse(localStorage.getItem("user"));
 
   return (
     <div className="task_card_container pointer">
       <div className="card-data">
-        <h6 onClick={() => navigate("/ticket")}>{subject}</h6>
+        <h6 onClick={() => navigate(`/ticket/${id}`)}>{subject}</h6>
         <div className="d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-2">
             <input
@@ -57,9 +47,7 @@ const TaskCard = ({
         </div>
       </div>
       <div className="actions">
-        <p>
-          Created: {formattedDate} - {hour}:{minutes} uur
-        </p>
+        <p>Created: {getDateTime(createdAt)}</p>
         <button
           onClick={() => {
             setEditData({

@@ -11,6 +11,9 @@ import {
   UPDATE_TICKET_REQUEST,
   UPDATE_TICKET_SUCCESS,
   UPDATE_TICKET_FAIL,
+  GET_SINGLE_TICKET_REQUEST,
+  GET_SINGLE_TICKET_SUCCESS,
+  GET_SINGLE_TICKET_FAIL,
 } from "../../type/client/ticket";
 import { database } from "../../../firebase";
 import {
@@ -48,6 +51,32 @@ export const registerTicket = (ticketData) => async (dispatch) => {
     dispatch({
       type: ADD_TICKET_FAIL,
       payload: error.message,
+    });
+  }
+};
+
+// Get single Ticket
+export const getSingleTicket = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_SINGLE_TICKET_REQUEST });
+
+    const q = collection(database, collectionName);
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    const filteredData = data.filter((content) => content.id === id);
+
+    dispatch({
+      type: GET_SINGLE_TICKET_SUCCESS,
+      payload: filteredData[0],
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_SINGLE_TICKET_FAIL,
+      payload: error.response.data.message,
     });
   }
 };
@@ -95,6 +124,7 @@ export const deleteTicket = (id, url) => async (dispatch) => {
 };
 
 // Update Ticket
+
 export const updateTicket = (updatedData, id) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_TICKET_REQUEST });
@@ -102,9 +132,11 @@ export const updateTicket = (updatedData, id) => async (dispatch) => {
     const docRef = doc(database, collectionName, id);
     await updateDoc(docRef, updatedData);
 
+    const updatedDoc = await getDoc(docRef); // fetch the updated document
+
     dispatch({
       type: UPDATE_TICKET_SUCCESS,
-      payload: { id: id, ...updatedData },
+      payload: { id: updatedDoc.id, ...updatedDoc.data() },
     });
   } catch (error) {
     dispatch({

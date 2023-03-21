@@ -17,7 +17,7 @@ import {
   ADD_TICKET_RESET,
   UPDATE_TICKET_RESET,
 } from "../redux/type/client/ticket";
-import SmallLoader from "./SmallLoader";
+import FormSubmitBtn from "./FormSubmitBtn";
 
 const TicketForm = ({ register, setRegister, editData, setEditData }) => {
   const dispatch = useDispatch();
@@ -133,6 +133,8 @@ const TicketForm = ({ register, setRegister, editData, setEditData }) => {
     }
   };
 
+  const auth = JSON.parse(localStorage.getItem("auth"));
+
   const submit = (e) => {
     e.preventDefault();
     const errors = validateFields(inputHandle);
@@ -159,8 +161,11 @@ const TicketForm = ({ register, setRegister, editData, setEditData }) => {
         registerTicket({
           ...inputHandle,
           client: client.id,
+          reporter: auth.name,
           status: "todo",
           createdAt: new Date().toISOString(),
+          updatedAt: null,
+          resolvedAt: null,
         })
       );
     }
@@ -244,19 +249,12 @@ const TicketForm = ({ register, setRegister, editData, setEditData }) => {
                 })}
 
                 <div className="col-12">
-                  <button
-                    disabled={
-                      !ticketLoading && inputHandle.picture !== "loading..."
-                        ? false
-                        : true
-                    }
-                    type="submit"
-                    className="rounded-3 btn-lg rounded-3 border-0 w-100 text-center text-white py-2"
-                  >
-                    {(ticketLoading && <SmallLoader />) || (
-                      <div>{(editData && "Edit") || "Create"} ticket</div>
-                    )}
-                  </button>
+                  <FormSubmitBtn
+                    editData={editData}
+                    innerText="ticket"
+                    inputHandle={inputHandle}
+                    loading={ticketLoading}
+                  />
                 </div>
               </div>
             </div>
