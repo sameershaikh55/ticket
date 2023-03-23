@@ -96,9 +96,13 @@ export const getTicket = () => async (dispatch) => {
       ...doc.data(),
     }));
 
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const filteredData = data.filter((content) => content.client === user.id);
+
     dispatch({
       type: GET_TICKET_SUCCESS,
-      payload: data,
+      payload: filteredData,
     });
   } catch (error) {
     dispatch({ type: GET_TICKET_FAIL, payload: error.message });

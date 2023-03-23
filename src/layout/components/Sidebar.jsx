@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
-import logo2 from "../../assets/logo2.svg";
 import i1 from "../../assets/sidebar/i1.svg";
 import i2 from "../../assets/sidebar/i2.svg";
 import i3 from "../../assets/sidebar/i3.svg";
 import Di1 from "../../assets/sidebarDark/i1.svg";
 import Di2 from "../../assets/sidebarDark/i2.svg";
 import Di3 from "../../assets/sidebarDark/i3.svg";
+import Loader from "../../components/Loader";
 import { logout } from "../../redux/action/admin/auth";
+import { getClient } from "../../redux/action/admin/clients";
 
 const Sidebar = () => {
+  const [showClients, setShowClients] = useState(false);
   const dispatch = useDispatch();
   const { mode } = useSelector((state) => state.mode);
   const location = useLocation();
@@ -26,10 +28,57 @@ const Sidebar = () => {
     },
   ];
 
+  const { clients, loading } = useSelector((state) => state.client);
+
+  useEffect(() => {
+    dispatch(getClient());
+  }, []);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const auth = JSON.parse(localStorage.getItem("auth"));
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="sidebar_container d-flex flex-column justify-content-between align-items-center">
-      <div>
-        <img src={logo2} alt="" />
+      <div className="d-flex flex-column gap-3">
+        <img
+          onClick={() => {
+            if (auth?.projects) {
+              setShowClients(!showClients);
+            }
+          }}
+          className={`logo ${(auth?.projects && "pointer") || ""}`}
+          src={user.logo}
+          alt=""
+        />
+
+        {(showClients &&
+          clients.map((content, i) => {
+            if (content.id === user.id) {
+              return;
+            }
+
+            if (!auth.projects.includes(content.name)) {
+              return;
+            }
+
+            return (
+              <img
+                onClick={() => {
+                  localStorage.setItem("user", JSON.stringify({ ...content }));
+                  window.location.reload();
+                }}
+                key={i}
+                className="pointer logo"
+                src={content.logo}
+                alt=""
+              />
+            );
+          })) ||
+          ""}
       </div>
 
       <div className="d-flex flex-column justify-content-between align-items-center gap-5">

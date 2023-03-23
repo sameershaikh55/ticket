@@ -829,6 +829,13 @@ input[type="date"] {
   border-top-left-radius: inherit;
   border-bottom-left-radius: inherit;
   // padding-left: 1rem;
+
+  .logo {
+    width: 37px;
+    height: 37px;
+    border-radius: 5px;
+    object-fit: cover;
+  }
 }
 // SIDEBAR END
 
@@ -873,6 +880,7 @@ input[type="date"] {
           height: 26px;
           width: 26px;
           border-radius: 50px;
+          object-fit: cover;
         }
 
         .screenshot {

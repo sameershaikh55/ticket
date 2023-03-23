@@ -60,6 +60,7 @@ export const logout = () => async (dispatch) => {
     if (localStorage.getItem("user")) {
       // User variable exists in localStorage, so remove it
       localStorage.removeItem("user");
+      localStorage.removeItem("auth");
     }
   } catch (error) {
     const errorCode = error.code.split("/");
