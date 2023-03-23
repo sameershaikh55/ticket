@@ -14,6 +14,7 @@ import { ADD_TEAM_RESET, UPDATE_TEAM_RESET } from "../redux/type/admin/team";
 import SmallLoader from "./SmallLoader";
 import { validateFields } from "../utils/validateFields";
 import { uploadImage } from "../utils/uploadImage";
+import lock from "../assets/icons/lock.svg";
 
 const TeamForm = ({ register, setRegister, editData, setEditData }) => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
   const [inputHandle, setInputHandle] = useState({
     name: "",
     email: "",
+    password: "",
     picture: "",
     projects: [],
   });
@@ -46,6 +48,14 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
       placeholder: "Enter Email",
       name: "email",
       class: "col-6",
+    },
+    {
+      label: "Password",
+      type: "text",
+      placeholder: "Enter Password",
+      name: "password",
+      icon: lock,
+      class: "col-12",
     },
     {
       label: "Picture",
@@ -152,10 +162,11 @@ const TeamForm = ({ register, setRegister, editData, setEditData }) => {
 
   useEffect(() => {
     if (editData) {
-      const { name, email, picture, projects } = editData;
+      const { name, email, password, picture, projects } = editData;
       setInputHandle({
         name,
         email,
+        password,
         picture,
         projects: (projects && projects.split(", ")) || [],
       });

@@ -75,6 +75,7 @@ const DetailForm = ({ singleTicket }) => {
       name: "status",
       options: [
         {
+          title: "To Do",
           value: "todo",
           html: (
             <div className="d-flex align-items-center gap-2">
@@ -84,6 +85,7 @@ const DetailForm = ({ singleTicket }) => {
           bg: "#facea0",
         },
         {
+          title: "In Progress",
           value: "progress",
           html: (
             <div className="d-flex align-items-center gap-2">
@@ -93,6 +95,7 @@ const DetailForm = ({ singleTicket }) => {
           bg: "#4f8df2",
         },
         {
+          title: "Done",
           value: "done",
           html: (
             <div className="d-flex align-items-center gap-2">

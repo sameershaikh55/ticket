@@ -11,6 +11,7 @@ const TaskCard = ({
   setEditData,
   setRegister,
   id,
+  status,
   ...content
 }) => {
   const navigate = useNavigate();
@@ -29,8 +30,14 @@ const TaskCard = ({
               name={`myCheckbox`}
               checked
               readOnly
+              className={`${(status === "done" && "green") || ""}`}
             />
-            <label htmlFor={`myCheckbox`}>{user.name}</label>
+            <label
+              className={`${(status === "done" && "greenlabel") || ""}`}
+              htmlFor={`myCheckbox`}
+            >
+              {user.name}
+            </label>
           </div>
           <ul className="list-unstyled d-flex gap-2 mb-0">
             <li>{type}</li>
@@ -55,6 +62,7 @@ const TaskCard = ({
               priority,
               subject,
               createdAt,
+              status,
               ...content,
             });
             setRegister(true);

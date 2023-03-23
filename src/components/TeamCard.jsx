@@ -11,6 +11,7 @@ const TeamCard = ({
   name,
   projects,
   id,
+  password,
   setEditData,
   setRegister,
 }) => {
@@ -58,7 +59,7 @@ const TeamCard = ({
               src={edit}
               alt=""
               onClick={() => {
-                setEditData({ picture, email, name, projects, id });
+                setEditData({ picture, email, name, projects, id, password });
                 setRegister(true);
               }}
             />

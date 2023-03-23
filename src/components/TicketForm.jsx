@@ -19,7 +19,13 @@ import {
 } from "../redux/type/client/ticket";
 import FormSubmitBtn from "./FormSubmitBtn";
 
-const TicketForm = ({ register, setRegister, editData, setEditData }) => {
+const TicketForm = ({
+  register,
+  setRegister,
+  editData,
+  setEditData,
+  messageNotRequried,
+}) => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -161,7 +167,7 @@ const TicketForm = ({ register, setRegister, editData, setEditData }) => {
         registerTicket({
           ...inputHandle,
           client: client.id,
-          reporter: auth.name,
+          createdBy: auth.id,
           status: "todo",
           createdAt: new Date().toISOString(),
           updatedAt: null,
@@ -178,12 +184,14 @@ const TicketForm = ({ register, setRegister, editData, setEditData }) => {
     }
 
     if (success) {
-      if (editData) {
-        alert.success("Ticket edited!");
-        dispatch({ type: UPDATE_TICKET_RESET });
-      } else {
-        alert.success("Ticket created!");
-        dispatch({ type: ADD_TICKET_RESET });
+      if (!messageNotRequried) {
+        if (editData) {
+          alert.success("Ticket edited!");
+          dispatch({ type: UPDATE_TICKET_RESET });
+        } else {
+          alert.success("Ticket created!");
+          dispatch({ type: ADD_TICKET_RESET });
+        }
       }
 
       setEditData(null);
@@ -210,6 +218,15 @@ const TicketForm = ({ register, setRegister, editData, setEditData }) => {
         priority,
         screenshot,
         explanation,
+      });
+    } else {
+      setInputHandle({
+        subject: "",
+        problem: "",
+        type: "Issue",
+        priority: "Low",
+        screenshot: "",
+        explanation: "",
       });
     }
   }, [editData]);

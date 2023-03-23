@@ -38,7 +38,6 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    console.log(ticket, "ticket");
     const todo = ticket.filter(({ status }) => status === "todo");
     const progress = ticket.filter(({ status }) => status === "progress");
     const done = ticket.filter(({ status }) => status === "done");
@@ -107,7 +106,12 @@ const Dashboard = () => {
 
                   {i === 0 && (
                     <div className="todo_actions">
-                      <button onClick={() => setRegister(true)}>
+                      <button
+                        onClick={() => {
+                          setRegister(true);
+                          setEditData(false);
+                        }}
+                      >
                         <img src={add} alt="" />
                         Create ticket
                       </button>

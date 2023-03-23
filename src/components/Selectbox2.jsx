@@ -39,7 +39,7 @@ const SelectBox2 = ({ state, label, name, options, onChange }) => {
           optionsContainer.classList.toggle("show");
         }}
       >
-        {state}
+        {(label === "Status" && filteredData[0].title) || state}
         <IoIosArrowDown
           color={(filteredData[0]?.bg === "#ffea4b" && "#000") || "#fff"}
           size={16}

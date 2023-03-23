@@ -687,6 +687,59 @@ input[type="date"] {
 }
 // LOGIN
 
+// TEXT EDITOR START
+.editor_container {
+  padding: 10px;
+  background-color: #e9edf2;
+  border-radius: 6px;
+  margin-top: 0.2rem;
+
+  .editor_container * {
+    font-family: inherit;
+  }
+
+  .rdw-editor-main {
+    min-height: 100px;
+    max-height: 100px;
+  }
+
+  .rdw-image-modal,
+  .rdw-emoji-modal,
+  .rdw-embedded-modal,
+  .rdw-link-modal {
+    right: 0%;
+    left: auto;
+  }
+
+  .rdw-embedded-modal {
+    height: 194px;
+  }
+
+  .rdw-link-modal {
+    height: 238px;
+  }
+
+  .rdw-editor-main::-webkit-scrollbar,
+  .rdw-dropdown-optionwrapper::-webkit-scrollbar {
+    width: 5px;
+  }
+  .rdw-editor-main::-webkit-scrollbar-track,
+  .rdw-dropdown-optionwrapper::-webkit-scrollbar-track {
+    background: #e2e6eb;
+  }
+  .rdw-editor-main::-webkit-scrollbar-thumb,
+  .rdw-dropdown-optionwrapper::-webkit-scrollbar-thumb {
+    background: #1c395c;
+    border-radius: 10px;
+  }
+  .rdw-fontfamily-wrapper,
+  .rdw-block-wrapper,
+  .rdw-fontsize-wrapper {
+    display: none;
+  }
+}
+// TEXT EDITOR END
+
 // REGISTER START
 .modal {
   position: fixed;
@@ -814,7 +867,17 @@ input[type="date"] {
       }
 
       .single_message {
-        width: 80%;
+        max-width: 800px;
+
+        .avatar {
+          height: 26px;
+          width: 26px;
+          border-radius: 50px;
+        }
+
+        .screenshot {
+          max-width: 120px;
+        }
 
         &.me {
           margin-left: auto;
@@ -827,12 +890,10 @@ input[type="date"] {
       .textbox_container {
         position: absolute;
         left: 0%;
-        bottom: 0%;
-        background-color: $color1;
-        height: 150px;
+        bottom: 0rem;
         width: 100%;
-        border-bottom-right-radius: 10px;
-        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 20px;
+        border-bottom-left-radius: 20px;
       }
     }
   }
@@ -1180,6 +1241,16 @@ input[type="date"] {
               border-radius: 2px;
             }
 
+            input[type="checkbox"].green:checked + label:before {
+              content: "\2713";
+              color: #fff;
+              text-align: center;
+              font-size: 16px;
+              line-height: 15px;
+              background-color: green;
+              border-radius: 2px;
+            }
+
             ul {
               li {
                 min-width: 70px;
@@ -1418,6 +1489,20 @@ input[type="date"] {
               font-size: 16px;
               line-height: 15px;
               background-color: #000;
+              border-radius: 2px;
+            }
+
+            label.greenlabel:before {
+              border-color: #3eb45e;
+            }
+
+            input[type="checkbox"].green:checked + label:before {
+              content: "\2713";
+              color: #fff;
+              text-align: center;
+              font-size: 16px;
+              line-height: 15px;
+              background-color: #3eb45e;
               border-radius: 2px;
             }
 
