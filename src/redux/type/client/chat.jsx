@@ -1,0 +1,10 @@
+export const ADD_CHAT_REQUEST = "ADD_CHAT_REQUEST";
+export const ADD_CHAT_SUCCESS = "ADD_CHAT_SUCCESS";
+export const ADD_CHAT_FAIL = "ADD_CHAT_FAIL";
+export const ADD_CHAT_RESET = "ADD_CHAT_RESET";
+
+export const GET_CHAT_REQUEST = "GET_CHAT_REQUEST";
+export const GET_CHAT_SUCCESS = "GET_CHAT_SUCCESS";
+export const GET_CHAT_FAIL = "GET_CHAT_FAIL";
+
+export const CLEAR_ERRORS = "CLEAR_ERRORS";

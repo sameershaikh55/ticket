@@ -10,6 +10,7 @@ import { teamReducer } from "./reducer/admin/team";
 import { clientReducer } from "./reducer/admin/clients";
 import { managersReducer } from "./reducer/admin/managers";
 import { ticketReducer } from "./reducer/client/ticket";
+import { chatReducer } from "./reducer/client/chat";
 
 const reducer = combineReducers({
   mode: modeReducer,
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   client: clientReducer,
   manager: managersReducer,
   ticket: ticketReducer,
+  chat: chatReducer,
 });
 
 let initialState = {};

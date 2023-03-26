@@ -26,6 +26,7 @@ import {
   query,
   orderBy,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { deleteFileFromUrl } from "../../../utils/deleteImagefromStorage";
 
@@ -42,6 +43,12 @@ export const registerTicket = (ticketData) => async (dispatch) => {
     );
     const docSnapshot = await getDoc(docRef);
     const addedData = { id: docSnapshot.id, ...docSnapshot.data() };
+
+    const chat = {
+      ticket: docSnapshot.id,
+      messages: [],
+    };
+    await addDoc(collection(database, "chat"), chat);
 
     dispatch({
       type: ADD_TICKET_SUCCESS,
@@ -112,6 +119,13 @@ export const getTicket = () => async (dispatch) => {
 // Delete Ticket
 export const deleteTicket = (id, url) => async (dispatch) => {
   try {
+    const chatQuerySnapshot = await getDocs(
+      query(collection(database, "chat"), where("ticket", "==", id))
+    );
+    chatQuerySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+
     await deleteDoc(doc(database, collectionName, id));
     deleteFileFromUrl(url);
 
@@ -126,7 +140,6 @@ export const deleteTicket = (id, url) => async (dispatch) => {
     });
   }
 };
-
 // Update Ticket
 
 export const updateTicket = (updatedData, id) => async (dispatch) => {

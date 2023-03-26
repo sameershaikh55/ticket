@@ -20,7 +20,7 @@ const Modal = ({ children, register, setRegister, noCross }) => {
             onClick={() => setRegister(false)}
             className="cross bg-transparent border-0 p-0"
           >
-            <img style={{ transform: "rotate(45deg)" }} src={cross} alt="" />
+            <img style={{ transform: "rotate(90deg)" }} src={cross} alt="" />
           </button>
         )}
 
