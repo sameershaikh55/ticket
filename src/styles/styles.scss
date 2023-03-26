@@ -737,6 +737,11 @@ input[type="date"] {
   .rdw-fontsize-wrapper {
     display: none;
   }
+
+  button {
+    background: $color2;
+    color: $color4;
+  }
 }
 // TEXT EDITOR END
 
@@ -859,7 +864,8 @@ input[type="date"] {
         height: calc(100vh - 340px);
         overflow-y: auto;
         padding-right: 1rem;
-
+        padding-bottom: 3rem;
+        
         &::-webkit-scrollbar {
           width: 5px;
         }

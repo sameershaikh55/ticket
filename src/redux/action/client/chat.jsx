@@ -18,6 +18,8 @@ import {
   query,
   orderBy,
   updateDoc,
+  arrayUnion,
+  where,
 } from "firebase/firestore";
 
 const collectionName = "chat";
@@ -29,8 +31,7 @@ export const getChat = (ticketId) => async (dispatch) => {
 
     const q = query(
       collection(database, collectionName),
-      where("ticket", "==", ticketId),
-      orderBy("createdAt", "desc")
+      where("ticket", "==", ticketId)
     );
     const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((doc) => ({
@@ -38,11 +39,9 @@ export const getChat = (ticketId) => async (dispatch) => {
       ...doc.data(),
     }));
 
-    console.log(data);
-
     dispatch({
       type: GET_CHAT_SUCCESS,
-      payload: data,
+      payload: data[0],
     });
   } catch (error) {
     dispatch({ type: GET_CHAT_FAIL, payload: error.message });
@@ -50,20 +49,19 @@ export const getChat = (ticketId) => async (dispatch) => {
 };
 
 // Register Chat
-export const registerChat = (ticketData) => async (dispatch) => {
+export const addMessage = (messageData, id) => async (dispatch) => {
   try {
     dispatch({ type: ADD_CHAT_REQUEST });
 
-    const docRef = await addDoc(
-      collection(database, collectionName),
-      ticketData
-    );
-    const docSnapshot = await getDoc(docRef);
-    const addedData = { id: docSnapshot.id, ...docSnapshot.data() };
+    const docRef = doc(database, collectionName, id);
+
+    await updateDoc(docRef, {
+      messages: arrayUnion(messageData),
+    });
 
     dispatch({
       type: ADD_CHAT_SUCCESS,
-      payload: addedData,
+      payload: messageData,
     });
   } catch (error) {
     dispatch({
@@ -71,4 +69,9 @@ export const registerChat = (ticketData) => async (dispatch) => {
       payload: error.message,
     });
   }
+};
+
+// Clearing Errors
+export const clearErrors = () => async (dispatch) => {
+  dispatch({ type: CLEAR_ERRORS });
 };

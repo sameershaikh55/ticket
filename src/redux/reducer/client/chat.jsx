@@ -11,7 +11,7 @@ import {
 
 export const chatReducer = (
   state = {
-    chat: [],
+    chat: {},
   },
   action
 ) => {
@@ -31,13 +31,16 @@ export const chatReducer = (
         ...state,
         chatLoading: false,
         success: true,
-        chat: [action.payload, ...state.chat],
+        chat: {
+          ...state.chat,
+          messages: [...state.chat.messages, { ...action.payload }],
+        },
       };
     case GET_CHAT_SUCCESS:
       return {
         ...state,
         loading: false,
-        chat: action.payload,
+        chat: { ...action.payload },
       };
     case ADD_CHAT_FAIL:
       return {
@@ -48,7 +51,7 @@ export const chatReducer = (
       };
     case GET_CHAT_FAIL:
       return {
-        chat: [],
+        chat: {},
         loading: false,
         error: action.payload,
       };

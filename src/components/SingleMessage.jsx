@@ -1,28 +1,33 @@
 import React from "react";
 import doubleCheck from "../assets/icons/doubleCheck.svg";
 import avatar from "../assets/avatar.png";
+import useCreatedBy from "../hooks/useCreatedBy";
+import { getDateTime } from "../utils/getDateTime";
 
-const SingleMessage = () => {
+const SingleMessage = ({ message, createdBy }) => {
+  const auth = JSON.parse(localStorage.getItem("auth"));
+
+  let user = useCreatedBy(createdBy);
+  user = user[0];
+
   return (
-    <div className="single_message me d-flex align-items-start gap-2">
+    <div
+      className={`single_message d-flex align-items-start gap-2 ${
+        (auth.id !== user?.id && "me") || ""
+      }`}
+    >
       <img className="avatar" src={avatar} alt="" />
-      <div className="d-flex flex-column gap-3">
-        <div className="d-flex justify-content-between align-items-center mt-1">
+      <div className="d-flex flex-column gap-3 w-100">
+        <div className="d-flex justify-content-between align-items-center mt-1 w-100">
           <div className="d-flex align-items-center gap-2">
-            <p className="f14 mb-0">Amir (Faktor 22)</p>
+            <p className="f14 mb-0">{user?.name}</p>
           </div>
           <div className="d-flex align-items-center gap-2">
-            <p className="f14 mb-0">21-01-2023 | 14:00 uur</p>
+            <p className="f14 mb-0">{getDateTime(user?.createdAt)}</p>
             <img src={doubleCheck} alt="" />
           </div>
         </div>
-        <div>
-          <p className="f12 mb-0">
-            Where’s the problem? (url): https://google.nl Screenshot:
-            //screenshot-firefox-12-12-23.png Explanation: Lorem ipsum dolor sit
-            amet, consectetur
-          </p>
-        </div>
+        <div dangerouslySetInnerHTML={{ __html: message }}></div>
       </div>
     </div>
   );

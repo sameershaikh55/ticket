@@ -12,7 +12,6 @@ import {
   deleteTicket,
   clearErrors,
 } from "../../redux/action/client/ticket";
-import { getTeam } from "../../redux/action/admin/team";
 import DetailForm from "../../components/DetailForm";
 import { DELETE_TICKET_RESET } from "../../redux/type/client/ticket";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +20,7 @@ import Chat from "../../components/Chat";
 import Timeline from "../../components/Timeline";
 import TeamImages from "../../components/TeamImages";
 import Reporter from "../../components/Reporter";
-import { getManager } from "../../redux/action/admin/managers";
+import useCreatedBy from "../../hooks/useCreatedBy";
 
 const TicketDetail = () => {
   const { id } = useParams();
@@ -32,18 +31,11 @@ const TicketDetail = () => {
   const { singleTicket, ticketDeleted, error, loading } = useSelector(
     (state) => state.ticket
   );
-  const { team } = useSelector((state) => state.team);
-  const { managers } = useSelector((state) => state.manager);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const auth = JSON.parse(localStorage.getItem("auth"));
 
   const [register, setRegister] = useState(false);
-
-  useEffect(() => {
-    dispatch(getTeam());
-    dispatch(getManager());
-  }, []);
 
   useEffect(() => {
     if (id) {
@@ -64,13 +56,11 @@ const TicketDetail = () => {
     }
   }, [dispatch, alert, ticketDeleted, error]);
 
+  const createdBy = useCreatedBy(singleTicket.createdBy);
+
   if (loading) {
     return <Loader />;
   }
-
-  const createdBy = [...team, ...managers].filter(
-    (content) => content.id === singleTicket.createdBy
-  );
 
   return (
     <div className="ticket_container d-flex flex-column">
