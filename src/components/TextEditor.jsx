@@ -15,6 +15,7 @@ const TextEditor = () => {
   const alert = useAlert();
   const [message, setMessage] = useState(EditorState.createEmpty());
 
+  const { singleTicket } = useSelector((state) => state.ticket);
   const { chat, chatLoading, success, chatError } = useSelector(
     (state) => state.chat
   );
@@ -68,7 +69,11 @@ const TextEditor = () => {
   };
 
   return (
-    <div className="editor_container">
+    <div
+      className={`editor_container ${
+        (singleTicket?.status === "done" && "ticket_done") || ""
+      }`}
+    >
       <Editor
         editorState={message}
         onEditorStateChange={onEditorStateChange}

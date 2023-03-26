@@ -694,6 +694,30 @@ input[type="date"] {
   border-radius: 6px;
   margin-top: 0.2rem;
 
+  &.ticket_done {
+    position: relative;
+
+    &::after {
+      content: "Marked as Done";
+      position: absolute;
+      left: 0%;
+      top: 0%;
+      right: 0%;
+      bottom: 0%;
+      background: #ffffffac;
+      width: 100%;
+      height: 100%;
+      font-weight: 800;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      color: #3eb45e;
+      z-index: 1;
+    }
+  }
+
   .editor_container * {
     font-family: inherit;
   }
