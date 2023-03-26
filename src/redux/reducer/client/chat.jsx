@@ -31,10 +31,10 @@ export const chatReducer = (
         ...state,
         chatLoading: false,
         success: true,
-        chat: {
-          ...state.chat,
-          messages: [...state.chat.messages, { ...action.payload }],
-        },
+        // chat: {
+        //   ...state.chat,
+        //   messages: [...state.chat.messages, { ...action.payload }],
+        // },
       };
     case GET_CHAT_SUCCESS:
       return {

@@ -22,7 +22,7 @@ const Chat = ({ ...props }) => {
   }, []);
 
   useEffect(() => {
-    chatRef.current.scrollTo(0, chatRef.current.scrollHeight);
+    chatRef.current?.scrollTo(0, chatRef.current.scrollHeight);
   }, [chat]);
 
   return (

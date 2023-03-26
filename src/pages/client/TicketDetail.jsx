@@ -92,11 +92,11 @@ const TicketDetail = () => {
       <p className="f18 mt-1">{singleTicket.subject}</p>
 
       <div className="main_chat_container">
-        <div className="row">
-          <div className="col-9">
+        <div className="row gy-5">
+          <div className="col-12 col-md-9">
             <Chat createdBy={createdBy[0]} singleTicket={singleTicket} />
           </div>
-          <div className="col-3">
+          <div className="col-12 col-md-3">
             <div className="d-flex flex-column h-100">
               <div className="details_container d-flex flex-column justify-content-between h-100">
                 <div>

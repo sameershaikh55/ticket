@@ -10,16 +10,14 @@ import {
 import { database } from "../../../firebase";
 import {
   collection,
-  deleteDoc,
   doc,
-  getDocs,
-  getDoc,
-  addDoc,
   query,
-  orderBy,
   updateDoc,
   arrayUnion,
   where,
+  onSnapshot,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 
 const collectionName = "chat";
@@ -33,16 +31,19 @@ export const getChat = (ticketId) => async (dispatch) => {
       collection(database, collectionName),
       where("ticket", "==", ticketId)
     );
-    const querySnapshot = await getDocs(q);
-    const data = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
 
-    dispatch({
-      type: GET_CHAT_SUCCESS,
-      payload: data[0],
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      dispatch({
+        type: GET_CHAT_SUCCESS,
+        payload: data[0],
+      });
     });
+
+    return () => unsubscribe();
   } catch (error) {
     dispatch({ type: GET_CHAT_FAIL, payload: error.message });
   }

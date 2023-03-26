@@ -42,6 +42,8 @@ const TextEditor = () => {
           chat.id
         )
       );
+
+      setMessage(EditorState.createEmpty());
     } else {
       alert.error("Please enter text");
     }
@@ -54,14 +56,24 @@ const TextEditor = () => {
     }
 
     if (success) {
-      setMessage(EditorState.createEmpty());
       dispatch({ type: ADD_CHAT_RESET });
     }
   }, [dispatch, alert, success, chatError]);
 
+  // Trigger sendMessage when Control and Enter keys are pressed
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 13 && event.ctrlKey) {
+      sendMessage();
+    }
+  };
+
   return (
     <div className="editor_container">
-      <Editor editorState={message} onEditorStateChange={onEditorStateChange} />
+      <Editor
+        editorState={message}
+        onEditorStateChange={onEditorStateChange}
+        onKeyDown={handleKeyDown}
+      />
 
       <div className="d-flex justify-content-end">
         <button

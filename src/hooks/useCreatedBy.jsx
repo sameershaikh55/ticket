@@ -10,8 +10,12 @@ const useCreatedBy = (id) => {
   const { managers } = useSelector((state) => state.manager);
 
   useEffect(() => {
-    dispatch(getTeam());
-    dispatch(getManager());
+    if (!team.length) {
+      dispatch(getTeam());
+    }
+    if (!managers.length) {
+      dispatch(getManager());
+    }
   }, []);
 
   const createdBy = [...team, ...managers].filter(

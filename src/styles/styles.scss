@@ -856,6 +856,7 @@ input[type="date"] {
       position: relative;
       padding: 1rem;
       padding-bottom: 11rem;
+      transition: transform 0.3s ease-out;
 
       .inner_chat_messages_container {
         display: flex;
@@ -865,7 +866,8 @@ input[type="date"] {
         overflow-y: auto;
         padding-right: 1rem;
         padding-bottom: 3rem;
-        
+        transition: transform 0.3s ease-out;
+
         &::-webkit-scrollbar {
           width: 5px;
         }
@@ -1678,6 +1680,12 @@ input[type="date"] {
         width: 80%;
       }
     }
+  }
+  .main_chat_container
+    .chat_container
+    .inner_chat_container
+    .inner_chat_messages_container {
+    padding-bottom: 5rem;
   }
 }
 
