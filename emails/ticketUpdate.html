@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ticket Update</title>
+  </head>
+  <body>
+    <div
+      style="
+        background-color: #f0f4f5;
+        padding: 1rem;
+        border-radius: 10px;
+        font-family: 'Ubuntu', sans-serif;
+      "
+    >
+      <div
+        style="
+          border-bottom: 2px solid #8593a4;
+          display: flex;
+          justify-content: space-between;
+        "
+      >
+        <p>{{name}} has provided an update.</p>
+        <p>{{clientName}}</p>
+      </div>
+      <h2 style="font-weight: 500">Backup Server #1</h2>
+      <div style="display: flex">
+        <div>
+          <img
+            style="border-radius: 50px; height: 40px; width: 40px"
+            src="{{userPicture}}"
+            alt=""
+          />
+        </div>
+        <div style="padding-left: 1rem">
+          <p>{{name}} - {{createdAt}}</p>
+          <div style="display: flex">
+            <p>Status changed from {{previous_status}} > {{current_status}}</p>
+          </div>
+        </div>
+      </div>
+      <a style="cursor: pointer" href="{{ticketLink}}"
+        ><button
+          style="
+            background-color: #4f8df2;
+            border-radius: 6px;
+            color: #fff !important;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            cursor: pointer;
+          "
+        >
+          View Ticket
+        </button></a
+      >
+      <div
+        style="
+          margin: 1rem 0rem;
+          height: 2px;
+          width: 100%;
+          background-color: #8593a4;
+        "
+      >
+        &nbsp;
+      </div>
+      <div style="display: flex; justify-content: flex-end">
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/ticket-8d484.appspot.com/o/logo.svg?alt=media&amp;token=3603d979-ec72-497a-abd3-5ba18fb6f761"
+          alt=""
+        />
+      </div>
+    </div>
+  </body>
+</html>

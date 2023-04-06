@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="87.854" height="24.736" viewBox="0 0 87.854 24.736">
+  <text id="Faktor_22" data-name="Faktor 22" transform="translate(0 2.736)" fill="#2e343d" font-size="10" font-family="SegoeUI-Light, Segoe UI" font-weight="300"><tspan x="26.611" y="11">Faktor 22</tspan></text>
+  <g id="logo-faktor22-animated" transform="translate(66.038 55.352)">
+    <g id="logo-faktor22-rectangle_to" transform="translate(8.342 -55.352)">
+      <path id="logo-faktor22-rectangle" d="M38.732,17.2h2.246a.237.237,0,0,1,.237.237v2.178a.237.237,0,0,1-.237.237H38.732a.237.237,0,0,1-.237-.237V17.437A.232.232,0,0,1,38.732,17.2Z" transform="translate(-38.495 -17.2)" fill="#212327"/>
+    </g>
+    <g id="logo-faktor22-rectangle-2_to" transform="translate(8.342 -49.877)">
+      <path id="logo-faktor22-rectangle-2" d="M38.732,81.8h2.246a.237.237,0,0,1,.237.237v11.77a.237.237,0,0,1-.237.237H38.732a.237.237,0,0,1-.237-.237V82.046A.234.234,0,0,1,38.732,81.8Z" transform="translate(-38.495 -81.8)" fill="#212327"/>
+    </g>
+    <g id="logo-faktor22-rectangle-3_to" transform="translate(19.096 -55.352)">
+      <path id="logo-faktor22-rectangle-3" d="M165.637,17.2h2.246a.237.237,0,0,1,.237.237v2.839a.237.237,0,0,1-.237.237h-2.246a.237.237,0,0,1-.237-.237V17.437A.237.237,0,0,1,165.637,17.2Z" transform="translate(-165.4 -17.2)" fill="#212327"/>
+    </g>
+    <g id="logo-faktor22-rectangle-4_to" transform="translate(19.096 -49.208)">
+      <path id="logo-faktor22-rectangle-4" d="M165.637,89.7h2.246a.237.237,0,0,1,.237.237v3.635a.237.237,0,0,1-.237.237h-2.246a.237.237,0,0,1-.237-.237V89.937A.232.232,0,0,1,165.637,89.7Z" transform="translate(-165.4 -89.7)" fill="#212327"/>
+    </g>
+    <g id="logo-faktor22-rectangle-5_to" transform="translate(13.715 -55.352)">
+      <path id="logo-faktor22-rectangle-5" d="M102.137,17.2h2.246a.237.237,0,0,1,.237.237v5a.237.237,0,0,1-.237.237h-2.246a.237.237,0,0,1-.237-.237v-5A.242.242,0,0,1,102.137,17.2Z" transform="translate(-101.9 -17.2)" fill="#212327"/>
+    </g>
+    <g id="logo-faktor22-rectangle-6_to" transform="translate(13.715 -47.089)">
+      <path id="logo-faktor22-rectangle-6" d="M102.137,114.7h2.246a.237.237,0,0,1,.237.237v3.534a.237.237,0,0,1-.237.237h-2.246a.237.237,0,0,1-.237-.237v-3.534A.242.242,0,0,1,102.137,114.7Z" transform="translate(-101.9 -114.7)" fill="#212327"/>
+    </g>
+  </g>
+</svg>

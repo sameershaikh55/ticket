@@ -29,6 +29,8 @@ import {
   where,
 } from "firebase/firestore";
 import { deleteFileFromUrl } from "../../../utils/deleteImagefromStorage";
+import { sendEmail } from "../../../utils/emailSender";
+import { getDateTime } from "../../../utils/getDateTime";
 
 const collectionName = "ticket";
 
@@ -36,6 +38,9 @@ const collectionName = "ticket";
 export const registerTicket = (ticketData) => async (dispatch) => {
   try {
     dispatch({ type: ADD_TICKET_REQUEST });
+
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const user = JSON.parse(localStorage.getItem("user"));
 
     const docRef = await addDoc(
       collection(database, collectionName),
@@ -50,6 +55,22 @@ export const registerTicket = (ticketData) => async (dispatch) => {
     };
     await addDoc(collection(database, "chat"), chat);
 
+    sendEmail(
+      {
+        email_title: user.name,
+        priority: ticketData.priority,
+        type: ticketData.type,
+        problem: ticketData.problem,
+        screenshot: ticketData.screenshot,
+        explanation: ticketData.explanation,
+        createdAt: getDateTime(ticketData.createdAt),
+        to_email: [auth.email, "ticket@faktor22.nl"],
+        name: auth.name,
+        userPicture: auth.picture,
+        ticketLink: `${window.location.origin}/ticket/${docSnapshot.id}`,
+      },
+      "template_xlpg09n"
+    );
     dispatch({
       type: ADD_TICKET_SUCCESS,
       payload: addedData,
@@ -146,14 +167,35 @@ export const updateTicket = (updatedData, id) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_TICKET_REQUEST });
 
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const user = JSON.parse(localStorage.getItem("user"));
+
     const docRef = doc(database, collectionName, id);
+    const beforeUpdatedDoc = await getDoc(docRef); // fetch the updated document
     await updateDoc(docRef, updatedData);
 
     const updatedDoc = await getDoc(docRef); // fetch the updated document
+    const updatedDocData = { id: updatedDoc.id, ...updatedDoc.data() }; // fetch the updated document
+
+    if ("status" in updatedData) {
+      sendEmail(
+        {
+          email_title: user.name,
+          createdAt: getDateTime(updatedDocData.createdAt),
+          to_email: [auth.email, "ticket@faktor22.nl"],
+          name: auth.name,
+          userPicture: auth.picture,
+          previous_status: beforeUpdatedDoc.data().status.toUpperCase(),
+          current_status: updatedDocData.status.toUpperCase(),
+          ticketLink: `${window.location.origin}/ticket/${updatedDoc.id}`,
+        },
+        "template_t9ar56u"
+      );
+    }
 
     dispatch({
       type: UPDATE_TICKET_SUCCESS,
-      payload: { id: updatedDoc.id, ...updatedDoc.data() },
+      payload: updatedDocData,
     });
   } catch (error) {
     dispatch({
