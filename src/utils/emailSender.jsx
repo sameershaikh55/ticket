@@ -1,7 +1,7 @@
 import emailjs from "@emailjs/browser";
 
 export function sendEmail(e, templateId) {
-  emailjs.send("gmail", templateId, { ...e }, "V7YTcY8m8QorDcClb").then(
+  emailjs.send("gmail", templateId, { ...e }, "service_bq77glh").then(
     (result) => {
       console.log(result.text);
     },
